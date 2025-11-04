@@ -9,11 +9,8 @@ This file is part of the SPECTRUM suite of scientific numerical simulation codes
 #ifndef SPECTRUM_PRINT_WARN_HH
 #define SPECTRUM_PRINT_WARN_HH
 
-#include <iostream>
 #include <fstream>
 #include <iomanip>
-#include <string>
-#include <cmath>
 
 #include "common/definitions.hh"
 
@@ -29,13 +26,13 @@ namespace Spectrum {
 #define line_width 1000
 
 //! Color of error messages (red)
-inline constexpr const std::string err_color = "\033[31m";
+inline constexpr std::string_view err_color = "\033[31m";
 
 //! Color of informational messages (green)
-inline constexpr const std::string inf_color = "\033[32m";
+inline constexpr std::string_view inf_color = "\033[32m";
 
 //! Color of normal messages (default)
-inline constexpr const std::string std_color = "\033[0m";
+inline constexpr std::string_view std_color = "\033[0m";
 
 /*!
 \brief Print an error message in color
@@ -82,7 +79,7 @@ inline void PrintMessage(const char* filename, int line, const std::string& mess
 inline void PrintPassFail(const std::string& message, double res1, double res2)
 {
    bool cmp = fabs(res2 - res1) / (fabs(res2) + fabs(res1)) < sp_tiny;
-   std::cerr << message + ": " << (cmp ? inf_color + "passed" : err_color + "failed");
+   std::cerr << message + ": " << (cmp ? inf_color : err_color) << (cmp ? "passed" : "failed");
    std::cerr << std_color;
    std::cerr << " (" << res1 << " / " << res2 << ")\n";
 };
