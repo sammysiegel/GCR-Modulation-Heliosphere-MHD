@@ -88,7 +88,7 @@ try {
    GeoVector pos_tmp;
    SpatialData spdata_forw, spdata_back;
    double Kperp_forw, Kperp_back, Kpara_forw, Kpara_back, Kappa_forw, Kappa_back;
-   double delta = fmin(LarmorRadius(_mom[0], _spdata.Bmag, specie), _spdata.dmax);
+   double delta = fmin(Particle::LarmorRadius<specie>(_mom[0], _spdata.Bmag), _spdata.dmax);
 
 // TODO: if the diffusion coefficients depend on more than just magnetic field, "spdata_xxxx._mask" should include more fields.
    spdata_forw._mask = BACKGROUND_U | BACKGROUND_B;
@@ -192,7 +192,7 @@ void TrajectoryParker::DriftCoeff(void)
 // Compute |B|*curl(b/|B|)
    drift_vel = (_spdata.curlB() - 2.0 * (_spdata.gradBmag ^ _spdata.bhat)) / _spdata.Bmag;
 // Scale by pvc/3q|B| = r_L*v/3
-   drift_vel *= LarmorRadius(_mom[0], _spdata.Bmag, specie) * _vel[0] / 3.0;
+   drift_vel *= Particle::LarmorRadius<specie>(_mom[0], _spdata.Bmag) * _vel[0] / 3.0;
 // Scale magnitude to an upper limit of v/2 if necessary.
    if (drift_vel.Norm() > 0.5 * _vel[0]) {
       drift_vel.Normalize();

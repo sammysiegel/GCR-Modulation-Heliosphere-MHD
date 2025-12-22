@@ -1,7 +1,4 @@
-#include <iostream>
-#include <iomanip>
-
-#include "src/background_dipole.hh"
+#include "src/background_solarwind.hh"
 #include "src/boundary_time.hh"
 #include "src/boundary_space.hh"
 #include "src/boundary_momentum.hh"
@@ -9,12 +6,13 @@
 #include "src/initial_space.hh"
 #include "src/initial_momentum.hh"
 #include "src/traj_config.hh"
+#include <iostream>
+#include <iomanip>
 
 using namespace Spectrum;
 
 int main(int argc, char** argv)
 {
-
    DataContainer container;
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -50,26 +48,36 @@ int main(int argc, char** argv)
    container.Insert(gv_zeros);
 
 // Velocity
-   container.Insert(gv_zeros);
+   double umag = 4.0e7 / Particle::unit_velocity;
+   GeoVector u0(umag, 0.0, 0.0);
+   container.Insert(u0);
 
 // Magnetic field
-   double Bmag = 0.311 / Particle::unit_magnetic;
-   GeoVector B0(0.0, 0.0, Bmag);
+   double RS = 6.957e10 / Particle::unit_length;
+   double r_ref = 3.0 * RS;
+   double BmagE = 5.0e-5 / Particle::unit_magnetic;
+   double one_au = SPC_CONST_CGSM_ASTRONOMICAL_UNIT / Particle::unit_length;
+   double Bmag_ref = BmagE * Sqr(one_au / r_ref);
+   GeoVector B0(Bmag_ref, 0.0, 0.0);
    container.Insert(B0);
 
 // Effective "mesh" resolution
-   double RE = 6.37e8 / Particle::unit_length;
-   double dmax_fraction = 0.1;
-   double dmax = dmax_fraction * RE;
+   double dmax = one_au;
    container.Insert(dmax);
 
+// Solar rotation vector
+   double w0 = M_2PI / (25.0 * 24.0 * 3600.0) * Particle::unit_time;
+   GeoVector Omega(0.0, 0.0, w0);
+   container.Insert(Omega);
+
 // Reference equatorial distance
-   container.Insert(RE);
+   container.Insert(r_ref);
 
 // dmax fraction for distances closer to the dipole
+   double dmax_fraction = 0.01;
    container.Insert(dmax_fraction);
 
-   trajectory->AddBackground(BackgroundDipole(), container);
+   trajectory->AddBackground(BackgroundSolarWind(), container);
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // Time initial condition
@@ -89,8 +97,7 @@ int main(int argc, char** argv)
 
    container.Clear();
 
-   double L = 4.0;
-   GeoVector start_pos(L*RE, 0.0, 0.0);
+   GeoVector start_pos(r_ref,0.0,0.0);
    container.Insert(start_pos);
 
    trajectory->AddInitial(InitialSpaceFixed(), container);
@@ -102,46 +109,41 @@ int main(int argc, char** argv)
    container.Clear();
 
 // Initial momentum
-   double MeV_kinetic_energy = 1.0;
-   double kinetic_energy = MeV_kinetic_energy * SPC_CONST_CGSM_MEGA_ELECTRON_VOLT / Particle::unit_energy;
-   container.Insert(Particle::Mom<specie>(kinetic_energy));
+   double keV_kinetic_energy = 1.0;
+   container.Insert(Particle::Mom<specie>(keV_kinetic_energy * SPC_CONST_CGSM_KILO_ELECTRON_VOLT / Particle::unit_energy));
 
-   double theta_eq = DegToRad(30.0);
-   container.Insert(theta_eq);
-
-   trajectory->AddInitial(InitialMomentumRing(), container);
+   trajectory->AddInitial(InitialMomentumShell(), container);
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-// Time boundary condition (end)
+// Space boundary condition 1 (source surface)
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 
    container.Clear();
 
 // Max crossings
-   int max_crossings_time = 1;
-   container.Insert(max_crossings_time);
+   int max_crossings = 1;
+   container.Insert(max_crossings);
 
 // Action
    std::vector<int> actions; // empty vector because there are no distributions
    container.Insert(actions);
-   
-// Duration of the trajectory
-   double drift_period = 3600.0 * 1.05 / MeV_kinetic_energy / L / (1.0 + 0.43 * sin(theta_eq)) / Particle::unit_time;
-   double bounce_period = 2.41 * L * (1.0 - 0.43 * sin(theta_eq)) / sqrt(MeV_kinetic_energy) / Particle::unit_time;
-   double maxtime = 10.0 * drift_period;
-   container.Insert(maxtime);
 
-   trajectory->AddBoundary(BoundaryTimeExpire(), container);
+// Origin
+   container.Insert(gv_zeros);
+
+// Radius
+   container.Insert(RS);
+
+   trajectory->AddBoundary(BoundarySphereAbsorb(), container);
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-// Space boundary condition 1 (Earth)
+// Space boundary condition 2 (termination shock)
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 
    container.Clear();
 
 // Max crossings
-   int max_crossings_Earth = 1;
-   container.Insert(max_crossings_Earth);
+   container.Insert(max_crossings);
 
 // Action
    container.Insert(actions);
@@ -150,66 +152,10 @@ int main(int argc, char** argv)
    container.Insert(gv_zeros);
 
 // Radius
-   container.Insert(RE);
+   double r_out = 10.0 * one_au;
+   container.Insert(r_out);
 
    trajectory->AddBoundary(BoundarySphereAbsorb(), container);
-
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-// Space boundary condition 2 (drift)
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-
-   container.Clear();
-
-// Max crossings
-   int max_crossings = -1;
-   container.Insert(max_crossings);
-
-// Action
-   container.Insert(actions);
-
-// Origin
-   container.Insert(gv_zeros);
-
-// Normal
-   GeoVector normal_drift(1.0,0.0,0.0);
-   container.Insert(normal_drift);
-
-   trajectory->AddBoundary(BoundaryPlanePass(), container);
-
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-// Space boundary condition 3 (bounce)
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-
-   container.Clear();
-
-// Max crossings
-   container.Insert(max_crossings);
-
-// Action
-   container.Insert(actions);
-
-// Origin
-   container.Insert(gv_zeros);
-
-// Normal
-   GeoVector normal_bounce(0.0,0.0,1.0);
-   container.Insert(normal_bounce);
-
-   trajectory->AddBoundary(BoundaryPlanePass(), container);
-
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-// Momentum boundary condition (bounce)
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-
-   container.Clear();
-
-// Max crossings
-   container.Insert(max_crossings);
-
-// Action
-   container.Insert(actions);
-
-   trajectory->AddBoundary(BoundaryMirror(), container);
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // Run the simulation
@@ -219,17 +165,13 @@ int main(int argc, char** argv)
    trajectory->Integrate();
    trajectory->InterpretStatus();
 
-   std::string trajectory_file = "main_test_dipole_drifts_" + trajectory->GetName() + ".lines";
+   std::string trajectory_file = "main_test_solarwind_parker_spiral_" + trajectory->GetName() + ".lines";
    std::cout << std::endl;
-   std::cout << "DIPOLE FIELD DRIFT PERIODS" << std::endl;
+   std::cout << "PARKER SPIRAL SOLAR WIND" << std::endl;
    std::cout << "++++++++++++++++++++" << std::endl;
    std::cout << "Trajectory type: " << trajectory->GetName() << std::endl;
-   std::cout << "Time elapsed (simulated)     = " << trajectory->ElapsedTime() * Particle::unit_time << " s" << std::endl;
-   std::cout << "drift period (theory)        = " << drift_period * Particle::unit_time << " s" << std::endl;
-   std::cout << "drift period (simulation)    = " << 2.0 * trajectory->ElapsedTime() * Particle::unit_time / trajectory->Crossings(1,1) << " s" << std::endl;
-   std::cout << "bounce period (theory)       = " << bounce_period * Particle::unit_time << " s" << std::endl;
-   std::cout << "bounce period (simulation 1) = " << 2.0 * trajectory->ElapsedTime() * Particle::unit_time / trajectory->Crossings(1,2) << " s" << std::endl;
-   std::cout << "bounce period (simulation 2) = " << 2.0 * trajectory->ElapsedTime() * Particle::unit_time / trajectory->Mirrorings() << " s" << std::endl;
+   std::cout << "Maximum radial distance  = " << r_out << " AU" << std::endl;
+   std::cout << "Time elapsed (simulated) = " << trajectory->ElapsedTime() * Particle::unit_time << " s" << std::endl;
    std::cout << "++++++++++++++++++++" << std::endl;
    std::cout << "Trajectory outputed to " << trajectory_file << std::endl;
    std::cout << std::endl;

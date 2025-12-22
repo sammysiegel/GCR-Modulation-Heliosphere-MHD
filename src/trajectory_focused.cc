@@ -6,8 +6,8 @@
 This file is part of the SPECTRUM suite of scientific numerical simulation codes. SPECTRUM stands for Space Plasma and Energetic Charged particle TRansport on Unstructured Meshes. The code simulates plasma or neutral particle flows using MHD equations on a grid, transport of cosmic rays using stochastic or grid based methods. The "unstructured" part refers to the use of a geodesic mesh providing a uniform coverage of the surface of a sphere.
 */
 
-#include "trajectory_focused.hh"
 #include "common/print_warn.hh"
+#include "src/trajectory_focused.hh"
 
 namespace Spectrum {
 
@@ -51,7 +51,7 @@ void TrajectoryFocused::SetStart(void)
    spdata0._mask = BACKGROUND_ALL | BACKGROUND_gradB | BACKGROUND_gradU | BACKGROUND_dUdt;
 
 // Magnetic moment is conserved (in the absence of scattering)
-   mag_mom = MagneticMoment(traj_mom[0][0] * sqrt(1.0 - Sqr(traj_mom[0][1])), _spdata.Bmag, specie);
+   mag_mom = Particle::MagneticMoment<specie>(traj_mom[0][0] * sqrt(1.0 - Sqr(traj_mom[0][1])), _spdata.Bmag);
 };
 
 /*!
@@ -71,7 +71,7 @@ void TrajectoryFocused::DriftCoeff(void)
    drift_vel += ( 0.5 * st2 * _spdata.bhat * (_spdata.Bvec * _spdata.curlB())
                 + ct2 * (_spdata.bhat ^ (_spdata.Bvec * _spdata.gradBvec)) ) / Sqr(_spdata.Bmag);
 // Scale by pvc/qB
-   drift_vel *= LarmorRadius(_mom[0], _spdata.Bmag, specie) * _vel[0];
+   drift_vel *= Particle::LarmorRadius<specie>(_mom[0], _spdata.Bmag) * _vel[0];
 // Add bulk flow and parallel velocities
    drift_vel += _spdata.Uvec + _vel[0] * _mom[1] * _spdata.bhat;
 #else
@@ -116,16 +116,14 @@ void TrajectoryFocused::Slopes(GeoVector& slope_pos_istage, GeoVector& slope_mom
    cdUvecdt = _spdata.dUvecdt + (_spdata.Uvec * _spdata.gradUvec);
    bhat_cdUvecdt = 2.0 * _spdata.bhat * cdUvecdt / _vel[0];
 
-   slope_mom_istage[0] = 0.5 * _mom[0] * ( (3.0 * st2 - 2.0) * bhatbhat_gradUvec 
-                                         - st2 * _spdata.divU() - _mom[1] * bhat_cdUvecdt);
+   slope_mom_istage[0] = 0.5 * _mom[0] * ((3.0 * st2 - 2.0) * bhatbhat_gradUvec - st2 * _spdata.divU() - _mom[1] * bhat_cdUvecdt);
 
 #if PPERP_METHOD == 1
-   slope_mom_istage[1] = 0.5 * st2 * ( _vel[0] * _spdata.divbhat() - bhat_cdUvecdt 
-                                     + _mom[1] * (_spdata.divU() - 3.0 * bhatbhat_gradUvec) );
+   slope_mom_istage[1] = 0.5 * st2 * (_vel[0] * _spdata.divbhat() - bhat_cdUvecdt + _mom[1] * (_spdata.divU() - 3.0 * bhatbhat_gradUvec));
 #else
    slope_mom_istage[1] = 0.0;
 #endif
-   
+
    slope_mom_istage[2] = 0.0;
 };
 
@@ -149,7 +147,7 @@ inline void TrajectoryFocused::MomentumCorrection(void)
 {
 // Adjust perp component to conserve magnetic moment
 #if PPERP_METHOD == 0
-   _mom[1] = sqrt(1.0 - Sqr(PerpMomentum(mag_mom, _spdata.Bmag, specie) / _mom[0]));
+   _mom[1] = sqrt(1.0 - Sqr(Particle::PerpMomentum<specie>(mag_mom, _spdata.Bmag) / _mom[0]));
 #endif
 
 //Check to enforce |mu| <= 1.0
