@@ -1,0 +1,1 @@
+./configure CXXFLAGS="-Ofast" --with-mpi=openmpi --with-execution=PARALLEL --with-trajectory=PARKER --with-time_flow=BACKWARD --with-rkmethod=0 --with-server=BATL --with-server_interp_order=1 --with-server_num_gcs=1
