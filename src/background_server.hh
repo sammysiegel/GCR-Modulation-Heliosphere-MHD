@@ -9,9 +9,10 @@ This file is part of the SPECTRUM suite of scientific numerical simulation codes
 #ifndef SPECTRUM_BACKGROUND_SERVER_HH
 #define SPECTRUM_BACKGROUND_SERVER_HH
 
-#include "src/background_base.hh"
+#include "background_base.hh"
 
 namespace Spectrum {
+
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // BackgroundServer class declaration

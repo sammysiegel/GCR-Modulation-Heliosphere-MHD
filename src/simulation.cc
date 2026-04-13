@@ -7,10 +7,9 @@
 This file is part of the SPECTRUM suite of scientific numerical simulation codes. SPECTRUM stands for Space Plasma and Energetic Charged particle TRansport on Unstructured Meshes. The code simulates plasma or neutral particle flows using MHD equations on a grid, transport of cosmic rays using stochastic or grid based methods. The "unstructured" part refers to the use of a geodesic mesh providing a uniform coverage of the surface of a sphere.
 */
 
-#include <numeric>
-
-#include "src/simulation.hh"
+#include "simulation.hh"
 #include "common/print_warn.hh"
+#include <numeric>
 
 namespace Spectrum {
 
@@ -82,6 +81,24 @@ std::string SimulationWorker::GetTrajectoryName(void) const
 
 /*!
 \author Vladimir Florinski
+\date 05/27/2022
+\param[in] specie_in Index of the particle species defined in physics.hh
+*/
+void SimulationWorker::SetSpecie(unsigned int specie_in)
+{
+   if ((specie_in < 0) || (specie_in >= MAX_PARTICLE_SPECIES)) {
+      PrintError(__FILE__, __LINE__, "Invalid particle specie", MPI_Config::is_master);
+      return;
+   };
+
+// The "trajectory" object will set the specie for its sub-classes
+   specie = specie_in;
+   trajectory->SetSpecie(specie_in);
+   PrintMessage(__FILE__, __LINE__, "Particle specie added", MPI_Config::is_master);
+};
+
+/*!
+\author Vladimir Florinski
 \author Juan G Alonso Guzman
 \date 05/27/2022
 \param[in] distribution_in Distribution object for type recognition
@@ -90,6 +107,7 @@ std::string SimulationWorker::GetTrajectoryName(void) const
 void SimulationWorker::AddDistribution(const DistributionBase& distribution_in, const DataContainer& container_in)
 {
    local_distros.push_back(distribution_in.Clone());
+   local_distros.back()->SetSpecie(specie);
    local_distros.back()->SetupObject(container_in);
    trajectory->ConnectDistribution(local_distros.back());
    PrintMessage(__FILE__, __LINE__, "Distribution object added", MPI_Config::is_master);
@@ -169,7 +187,7 @@ void SimulationWorker::SendDataToMaster(void)
    void * distro_addr, * w_records_addr;
 
 // Send distribution data to master and reset distribution
-   for (long unsigned int distro = 0; distro < local_distros.size(); distro++) {
+   for (int distro = 0; distro < local_distros.size(); distro++) {
       MPI_Send(local_distros[distro]->GetCountsAddress(), local_distros[distro]->NBins().Prod(), MPI_INT, 0, tag_distrdata, MPI_Config::work_comm);
       distro_addr = local_distros[distro]->GetDistroAddress(distro_size);
       MPI_Send(distro_addr, distro_size * local_distros[distro]->NBins().Prod(), MPI_BYTE, 0, tag_distrdata, MPI_Config::work_comm);
@@ -201,7 +219,7 @@ void SimulationWorker::SendDataToMaster(void)
 void SimulationWorker::WorkerStart(void)
 {
 // Reset quantities
-   for (long unsigned int distro = 0; distro < local_distros.size(); distro++) local_distros[distro]->ResetDistribution();
+   for (int distro = 0; distro < local_distros.size(); distro++) local_distros[distro]->ResetDistribution();
    jobsdone = 0;
 #if TRAJ_TIME_FLOW == TRAJ_TIME_FLOW_FORWARD
    shortest_sim_time = 1.0E300;
@@ -529,6 +547,7 @@ void SimulationMaster::AddDistribution(const DistributionBase& distribution_in, 
 {
 // TODO this should use make_unique instead of shared
    partial_distros.push_back(distribution_in.Clone());
+   partial_distros.back()->SetSpecie(specie);
    partial_distros.back()->SetupObject(container_in);
    SimulationWorker::AddDistribution(distribution_in, container_in);
 
@@ -557,9 +576,9 @@ Only master has this function so only master can decrement batch counter
 */
 void SimulationMaster::DecrementTrajectoryCount(void)
 {
-   int percentage_work_new;
+   int percentage_work_new, distro;
    long int n_trajectories_processing, n_trajectories_remaining, n_trajectories_completed;
-   long int wm_alloc_time, sim_time_left, sim_time_integ;
+   long int wm_alloc_time, sim_time_left, avg_integ_time, sim_time_integ;
    std::chrono::seconds sim_time_elapsed;
    std::chrono::system_clock::time_point sim_current_time;
 
@@ -589,7 +608,7 @@ void SimulationMaster::DecrementTrajectoryCount(void)
       percentage_work_done = percentage_work_new;
 
 // Save the partial distributions
-      for (long unsigned int distro = 0; distro < local_distros.size(); distro++) {
+      for (distro = 0; distro < local_distros.size(); distro++) {
          local_distros[distro]->Dump(distro_file_name + std::to_string(distro) + ".out");
       };
 
@@ -655,7 +674,7 @@ void SimulationMaster::RecvDataFromWorker(int cpu)
    void * distro_addr, * w_records_addr;
 
 // Receive partial distros and add it to cumulative distros
-   for (long unsigned int distro = 0; distro < local_distros.size(); distro++) {
+   for (int distro = 0; distro < local_distros.size(); distro++) {
       MPI_Recv(partial_distros[distro]->GetCountsAddress(), partial_distros[distro]->NBins().Prod(),
                MPI_INT, cpu, tag_distrdata, MPI_Config::work_comm, MPI_STATUS_IGNORE);
       distro_addr = partial_distros[distro]->GetDistroAddress(distro_size);
@@ -711,7 +730,7 @@ void SimulationMaster::MasterStart(void)
    sim_start_time = std::chrono::system_clock::now();
 
 // Reset quantities
-   for (long unsigned int distro = 0; distro < local_distros.size(); distro++) {
+   for (int distro = 0; distro < local_distros.size(); distro++) {
       local_distros[distro]->ResetDistribution();
       partial_distros[distro]->ResetDistribution();
 
@@ -773,6 +792,7 @@ void SimulationMaster::MasterDuties(void)
 */
 void SimulationMaster::MasterFinish(void)
 {
+   int distro, cpu;
    std::chrono::seconds sim_time_elapsed;
    std::chrono::system_clock::time_point sim_current_time;
    PrintMessage(__FILE__, __LINE__, "Simulation completed", MPI_Config::is_master);
@@ -788,16 +808,16 @@ void SimulationMaster::MasterFinish(void)
    };
 
 // Save the final distributions
-   for (long unsigned int distro = 0; distro < local_distros.size(); distro++) {
+   for (distro = 0; distro < local_distros.size(); distro++) {
       local_distros[distro]->Dump(distro_file_name + std::to_string(distro) + ".out");
    };
 
 // Print shortest and longest simulated time
-   std::cerr << "Shortest simulated trajectory time = " << shortest_sim_time * Particle::unit_time << " s" << std::endl;
-   std::cerr << "Longest simulated trajectory time = " << longest_sim_time * Particle::unit_time << " s" << std::endl;
+   std::cerr << "Shortest simulated trajectory time = " << shortest_sim_time * unit_time_fluid << " s" << std::endl;
+   std::cerr << "Longest simulated trajectory time = " << longest_sim_time * unit_time_fluid << " s" << std::endl;
    if (is_parallel) {
       std::cerr << "Time per trajectory integration:" << std::endl;
-      for (int cpu = 1; cpu < MPI_Config::work_comm_size; cpu++) {
+      for (cpu = 1; cpu < MPI_Config::work_comm_size; cpu++) {
          std::cerr << "\tcpu " << cpu << " = " << time_spent_processing[cpu] / trajectories_assigned[cpu] << " ms" << std::endl;
       };
    } 

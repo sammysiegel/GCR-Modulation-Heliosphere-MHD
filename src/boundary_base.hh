@@ -115,7 +115,7 @@ protected:
    GeoVector bhat;
 
 //! Region vector (transient)
-   GeoVector region;
+   SimpleArray<double, 4> region;
 
 //! Default constructor (protected, class not designed to be instantiated)
    BoundaryBase(void);
@@ -162,10 +162,10 @@ public:
    void DecrCrossingsLeft(void);
 
 //! Reset the crossings count and set the initial delta. The function should be called once, before starting a new trajectory.
-   void ResetBoundary(double t_in, const GeoVector& pos_in, const GeoVector& mom_in, const GeoVector& bhat_in, const GeoVector& region_in);
+   void ResetBoundary(double t_in, const GeoVector& pos_in, const GeoVector& mom_in, const GeoVector& bhat_in, const SimpleArray<double, 4>& region_in);
 
 //! Set the state and evaluate the boundary. Call this near the end of each time step, before the BC handler.
-   void ComputeBoundary(double t_in, const GeoVector& pos_in, const GeoVector& mom_in, const GeoVector& bhat_in, const GeoVector& region_in);
+   void ComputeBoundary(double t_in, const GeoVector& pos_in, const GeoVector& mom_in, const GeoVector& bhat_in, const SimpleArray<double, 4>& region_in);
 
 // Update the state of the boundary with the current PSCs. Should be used at the very end of each time step.
    void RecordBoundary(void);

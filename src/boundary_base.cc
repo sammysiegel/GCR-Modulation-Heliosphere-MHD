@@ -102,7 +102,7 @@ void BoundaryBase::EvaluateBoundary(void)
 \param[in] bhat_in Magnetic field direction
 \note This is a common routine that the derived classes should not change.
 */
-void BoundaryBase::ComputeBoundary(double t_in, const GeoVector& pos_in, const GeoVector& mom_in, const GeoVector& bhat_in, const GeoVector& region_in)
+void BoundaryBase::ComputeBoundary(double t_in, const GeoVector& pos_in, const GeoVector& mom_in, const GeoVector& bhat_in, const SimpleArray<double, 4>& region_in)
 {
    if (BITS_LOWERED(_status, STATE_SETUP_COMPLETE)) {
       RAISE_BITS(_status, STATE_INVALID);
@@ -135,7 +135,7 @@ void BoundaryBase::ComputeBoundary(double t_in, const GeoVector& pos_in, const G
 \param[in] mom_in Momentum
 \note This is a common routine that the derived classes should not change.
 */
-void BoundaryBase::ResetBoundary(double t_in, const GeoVector& pos_in, const GeoVector& mom_in, const GeoVector& bhat_in, const GeoVector& region_in)
+void BoundaryBase::ResetBoundary(double t_in, const GeoVector& pos_in, const GeoVector& mom_in, const GeoVector& bhat_in, const SimpleArray<double, 4>& region_in)
 {
    if (BITS_LOWERED(_status, STATE_SETUP_COMPLETE)) {
       RAISE_BITS(_status, STATE_INVALID);

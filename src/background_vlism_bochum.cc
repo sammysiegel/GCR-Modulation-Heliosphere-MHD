@@ -7,9 +7,8 @@
 This file is part of the SPECTRUM suite of scientific numerical simulation codes. SPECTRUM stands for Space Plasma and Energetic Charged particle TRansport on Unstructured Meshes. The code simulates plasma or neutral particle flows using MHD equations on a grid, transport of cosmic rays using stochastic or grid based methods. The "unstructured" part refers to the use of a geodesic mesh providing a uniform coverage of the surface of a sphere.
 */
 
-#include <cerrno>
-
-#include "src/background_vlism_bochum.hh"
+#include "background_vlism_bochum.hh"
+#include <gsl/gsl_sf_ellint.h>
 
 namespace Spectrum {
 
@@ -232,17 +231,19 @@ void BackgroundVLISMBochum::EvaluateBackground(void)
       arg2 = 1.0 / kappa;
 
 // New implementation for circumventing divergence of F and E
-      errno = 0;
-      double ellintF = std::ellint_1(arg2, arg1);
-      int statusF = errno;
-      errno = 0;
-      double ellintE = std::ellint_2(arg2, arg1);
-      int statusE = errno;
+      gsl_sf_result gsl_result_F, gsl_result_E;
+      int statusF = gsl_sf_ellint_F_e(arg1, arg2, GSL_PREC_DOUBLE, &gsl_result_F);
+      int statusE = gsl_sf_ellint_E_e(arg1, arg2, GSL_PREC_DOUBLE, &gsl_result_E);
+      double ellintF, ellintE;
 
 // A nonzero status indicates an error in elliptic integral evaluation. A value of 20 for F was obtained experimentally (the function is increasing logarithmically)
       if (statusF || statusE) {
          ellintF = 20.0;
          ellintE = 1.0;
+      }
+      else {
+         ellintF = gsl_result_F.val;
+         ellintE = gsl_result_E.val;
       };
 
 // Compute caligraphy T
@@ -295,7 +296,7 @@ void BackgroundVLISMBochum::EvaluateBackground(void)
 
 
 // Note that the flags to compute U and B should be enabled in order to compute E
-   if (BITS_RAISED(_spdata._mask, BACKGROUND_E)) _spdata.Evec = Particle::InducedEfield(_spdata.Uvec, _spdata.Bvec);
+   if (BITS_RAISED(_spdata._mask, BACKGROUND_E)) _spdata.Evec = -(_spdata.Uvec ^ _spdata.Bvec) / c_code;
 
    LOWER_BITS(_status, STATE_INVALID);
 };

@@ -394,19 +394,17 @@ void BoundarySphere::SetupBoundary(bool construct)
 */
 void BoundarySphere::EvaluateBoundary(void)
 {
-/*
-           . -- ~~~ -- .
-       .-~               ~-.
-      /                     \
-     /    delta<0            \
-    |                         |  norm
-    |            * r0         |---->
-    |            |            |
-     \           |           /
-      \        R |          /   delta>0
-       `-.       |       .-'
-           ~- . _V_ . -~
-*/
+//        . -- ~~~ -- .
+//    .-~               ~-.
+//   /                     \
+//  /    delta<0            \
+// |                         |  norm
+// |            * r0         |---->
+// |            |            |
+//  \           |           /
+//   \        R |          /   delta>0
+//    `-.       |       .-'
+//        ~- . _V_ . -~
 
    _delta = (_pos - origin).Norm() - radius;
    _normal = UnitVec(_pos - origin);
@@ -664,19 +662,17 @@ void BoundaryCylinder::SetupBoundary(bool construct)
 */
 void BoundaryCylinder::EvaluateBoundary(void)
 {
-/*
-           . -- ~~~ -- .
-       .-~               ~-.
-      /                     \
-     /    delta<0            \
-    |                         |  norm
-    |            * r0         |---->
-    |            |            |
-     \           |           /
-      \        R |          /   delta>0
-       `-.       |       .-'
-           ~- . _V_ . -~
-*/
+//        . -- ~~~ -- .
+//    .-~               ~-.
+//   /                     \
+//  /    delta<0            \
+// |                         |  norm
+// |            * r0         |---->
+// |            |            |
+//  \           |           /
+//   \        R |          /   delta>0
+//    `-.       |       .-'
+//        ~- . _V_ . -~
 
    GeoVector pos_rel = _pos - origin;
    pos_rel.ChangeToBasis(fa_basis);
@@ -786,19 +782,17 @@ void BoundaryRegion::SetupBoundary(bool construct)
 */
 void BoundaryRegion::EvaluateBoundary(void)
 {
-/*
-
-       _ .. -- ~~~~ -- . _
-      |                    \
-       \                    \
-        \                    \
-         )        delta<0     ) delta>0
-        /                    /
-       /                    /
-      |                    / 
-       ` ~ - . ____ . - ~ *
-
-*/
+//        
+//    _ .. -- ~~~~ -- . _
+//   |                    \
+//    \                    \
+//     \                    \
+//      )        delta<0     ) delta>0
+//     /                    /
+//    /                    /
+//   |                    / 
+//    ` ~ - . ____ . - ~ *
+//
 
    _delta = region[region_ind] - region_val;
 

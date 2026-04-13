@@ -10,13 +10,14 @@ This file is part of the SPECTRUM suite of scientific numerical simulation codes
 #ifndef SPECTRUM_TRAJECTORY_BASE_HH
 #define SPECTRUM_TRAJECTORY_BASE_HH
 
+// This includes (algorithm, cmath, cstdint, cstring, exception, fstream, vector), data_container, definitions, multi_index, params, physics, random, spatial_data, vectors
+#include "distribution_base.hh"
+#include "background_base.hh"
+#include "diffusion_base.hh"
+#include "source_base.hh"
+#include "boundary_base.hh"
+#include "initial_base.hh"
 #include "common/rk_config.hh"
-#include "src/distribution_base.hh"
-#include "src/background_base.hh"
-#include "src/diffusion_base.hh"
-#include "src/source_base.hh"
-#include "src/boundary_base.hh"
-#include "src/initial_base.hh"
 
 #ifndef TRAJ_TYPE
 #error Trajectory type is undefined!
@@ -35,7 +36,7 @@ namespace Spectrum {
 
 #if TRAJ_ADV_SAFETY_LEVEL == 2
 //! Largest length for single trajectory
-constexpr int max_trajectory_steps = 10000000;
+constexpr int max_trajectory_steps = 50000000;
 
 //! Largest number of time step adaptations for a single time step
 constexpr int max_time_adaptations = 100;
@@ -169,6 +170,9 @@ protected:
 
 //! Initial length of trajectory containers (persistent)
    unsigned int presize = 1;
+
+//! Particle's charge to mass ratio (persistent)
+   double q;
 
 //! Array of distribution objects (persistent)
    std::vector<std::shared_ptr<DistributionBase>> distributions;
@@ -511,7 +515,7 @@ inline void TrajectoryBase::Load(void)
    _pos = traj_pos.back();
    _mom = traj_mom.back();
 #endif
-   _vel = Particle::Vel<specie, CoordinateSystem::Cartesian>(_mom);
+   _vel = Vel(_mom, specie);
 };
 
 /*!
@@ -532,14 +536,14 @@ inline void TrajectoryBase::Store(void)
 /*!
 \author Vladimir Florinski
 \author Juan G Alonso Guzman
-\date 11/11/2025
+\date 07/15/2025
 */
 inline void TrajectoryBase::LoadLocal(void)
 {
    _t = local_t;
    _pos = local_pos;
    _mom = local_mom;
-   _vel = Particle::Vel<specie, CoordinateSystem::Cartesian>(_mom);
+   _vel = Vel(_mom, specie);
    _amp = local_amp;
    _wgt = local_wgt;
 };

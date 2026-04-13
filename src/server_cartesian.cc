@@ -6,13 +6,12 @@
 This file is part of the SPECTRUM suite of scientific numerical simulation codes. SPECTRUM stands for Space Plasma and Energetic Charged particle TRansport on Unstructured Meshes. The code simulates plasma or neutral particle flows using MHD equations on a grid, transport of cosmic rays using stochastic or grid based methods. The "unstructured" part refers to the use of a geodesic mesh providing a uniform coverage of the surface of a sphere.
 */
 
+#include "server_cartesian.hh"
+#include "block_cartesian.hh"
+#include "reader_cartesian.hh"
+#include "common/print_warn.hh"
 #include <iostream>
 #include <iomanip>
-
-#include "src/server_cartesian.hh"
-#include "src/block_cartesian.hh"
-#include "src/reader_cartesian.hh"
-#include "common/print_warn.hh"
 
 namespace Spectrum {
 
@@ -456,7 +455,7 @@ void ServerCartesianFront::GetVariablesFromReader(SpatialData& spdata)
 // Electric field, if B and U provided
 #ifndef SERVER_VAR_INDEX_ELE
 #if defined(SERVER_VAR_INDEX_FLO) || (defined(SERVER_VAR_INDEX_MOM) && defined(SERVER_VAR_INDEX_RHO))   
-   spdata.Evec = -(spdata.Uvec ^ spdata.Bvec) / Fluid::c_code;
+   spdata.Evec = -(spdata.Uvec ^ spdata.Bvec) / c_code;
 #endif
 #endif
 
@@ -527,7 +526,7 @@ void ServerCartesianFront::GetVariablesInterp0(const GeoVector& pos, SpatialData
 // Electric field, if B and U provided
 #ifndef SERVER_VAR_INDEX_ELE
 #if defined(SERVER_VAR_INDEX_FLO) || (defined(SERVER_VAR_INDEX_MOM) && defined(SERVER_VAR_INDEX_RHO))   
-   spdata.Evec = -(spdata.Uvec ^ spdata.Bvec) / Fluid::c_code;
+   spdata.Evec = -(spdata.Uvec ^ spdata.Bvec) / c_code;
 #endif
 #endif
 
@@ -654,7 +653,7 @@ void ServerCartesianFront::GetVariablesInterp1(const GeoVector& pos, SpatialData
 // Electric field, if B and U provided
 #ifndef SERVER_VAR_INDEX_ELE
 #if defined(SERVER_VAR_INDEX_FLO) || (defined(SERVER_VAR_INDEX_MOM) && defined(SERVER_VAR_INDEX_RHO))   
-   spdata.Evec = -(spdata.Uvec ^ spdata.Bvec) / Fluid::c_code;
+   spdata.Evec = -(spdata.Uvec ^ spdata.Bvec) / c_code;
 #endif
 #endif
 
@@ -699,20 +698,22 @@ void ServerCartesianFront::GetVariables(double t, const GeoVector& pos, SpatialD
 #elif SERVER_INTERP_ORDER == 1
 // Get variables using 1st order interpolation
    GetVariablesInterp1(pos, spdata);
+
 #else
 #error Unsupported interpolation order!
 #endif
 
 // Perform unit conversion for fields and region
 #ifdef SERVER_VAR_INDEX_DEN
-   spdata.region /= spdata.n_dens;
+// uncomment line below if region data are NOT pre-normalized by number density
+//   spdata.region /= spdata.n_dens;
 #endif
-   spdata.n_dens *= Fluid::unit_number_density / Particle::unit_number_density;
-   spdata.Uvec *= Fluid::unit_velocity / Particle::unit_velocity;
-   spdata.Bvec *= Fluid::unit_magnetic / Particle::unit_magnetic;
-   spdata.Bmag *= Fluid::unit_magnetic / Particle::unit_magnetic;
-   spdata.Evec *= Fluid::unit_magnetic / Particle::unit_magnetic;
-   spdata.p_ther *= Fluid::unit_pressure / Particle::unit_pressure;
+   spdata.n_dens *= unit_number_density_server / unit_number_density_fluid;
+   spdata.Uvec *= unit_velocity_server / unit_velocity_fluid;
+   spdata.Bvec *= unit_magnetic_server / unit_magnetic_fluid;
+   spdata.Bmag *= unit_magnetic_server / unit_magnetic_fluid;
+   spdata.Evec *= unit_electric_server / unit_electric_fluid;
+   spdata.p_ther *= unit_pressure_server / unit_pressure_fluid;
 };
 
 /*!
@@ -826,7 +827,7 @@ void ServerCartesianFront::GetGradientsInterp1(SpatialData& spdata)
 // Electric field, if B and U provided
 #ifndef SERVER_VAR_INDEX_ELE
 #if defined(SERVER_VAR_INDEX_FLO) || (defined(SERVER_VAR_INDEX_MOM) && defined(SERVER_VAR_INDEX_RHO))
-   spdata.gradEvec = -((spdata.gradUvec ^ spdata.Bvec) + (spdata.Uvec ^ spdata.gradBvec)) / Fluid::c_code;
+   spdata.gradEvec = -((spdata.gradUvec ^ spdata.Bvec) + (spdata.Uvec ^ spdata.gradBvec)) / c_code;
 #endif
 #endif
 
@@ -858,10 +859,10 @@ void ServerCartesianFront::GetGradients(SpatialData& spdata)
 #endif
 
 // Perform unit conversion for gradients
-   spdata.gradUvec *= Fluid::unit_velocity / Particle::unit_velocity;
-   spdata.gradBvec *= Fluid::unit_magnetic / Particle::unit_magnetic;
-   spdata.gradBmag *= Fluid::unit_magnetic / Particle::unit_magnetic;
-   spdata.gradEvec *= Fluid::unit_magnetic / Particle::unit_magnetic;
+   spdata.gradUvec *= unit_velocity_server / unit_velocity_fluid;
+   spdata.gradBvec *= unit_magnetic_server / unit_magnetic_fluid;
+   spdata.gradBmag *= unit_magnetic_server / unit_magnetic_fluid;
+   spdata.gradEvec *= unit_electric_server / unit_electric_fluid;
 };
 
 /*!
@@ -931,8 +932,8 @@ void ServerCartesianBack::ServerStart(void)
    std::string data_file = file_name_pattern + ".out";
 
    ReadData(data_file);
-   domain_min *= Fluid::unit_length / Particle::unit_length;
-   domain_max *= Fluid::unit_length / Particle::unit_length;
+   domain_min *= unit_length_server / unit_length_fluid;
+   domain_max *= unit_length_server / unit_length_fluid;
 
    MPI_Bcast(domain_min.Data(), 3, MPI_DOUBLE, 0, MPI_Config::node_comm);
    MPI_Bcast(domain_max.Data(), 3, MPI_DOUBLE, 0, MPI_Config::node_comm);
@@ -1013,7 +1014,7 @@ void ServerCartesianBack::HandleNeedVarsRequests(void)
       cpu = index_needvars[cpu_idx];
 
 // Obtain the variables requested
-      pos_cart = buf_needvars[cpu].pos / Fluid::unit_length * Particle::unit_length;
+      pos_cart = buf_needvars[cpu].pos / unit_length_server * unit_length_fluid;
       GetBlockData(pos_cart.Data(), vars, &found);
       if (!found) std::cerr << "Position not found\n";
 
@@ -1053,13 +1054,13 @@ void ServerCartesianBack::HandleNeedBlockRequests(void)
       cpu = index_needblock[cpu_idx];
 
       if (buf_needblock[cpu].type) {
-         pos_cart = buf_needblock[cpu].pos / Fluid::unit_length * Particle::unit_length;
+         pos_cart = buf_needblock[cpu].pos / unit_length_server * unit_length_fluid;
          GetBlock(pos_cart.Data(), &buf_needblock[cpu].node);
          if (buf_needblock[cpu].node == -1) throw ExServerError();
       };
 
       block_served->SetNode(buf_needblock[cpu].node);
-      block_served->LoadDimensions(Fluid::unit_length);
+      block_served->LoadDimensions(unit_length_server);
 
 // Send the block to a worker. We use a blocking Send to ensure that the buffer can be reused.
       MPI_Send(block_served, 1, MPIBlockType, cpu, tag_sendblock, MPI_Config::node_comm);
@@ -1079,6 +1080,7 @@ void ServerCartesianBack::HandleNeedBlockRequests(void)
 // Post the receive for the next block request from this worker
       MPI_Irecv(&buf_needblock[cpu], 1, MPIInquiryType, cpu, tag_needblock, MPI_Config::node_comm, &req_needblock[cpu]);
    };
+
 };
 
 /*!

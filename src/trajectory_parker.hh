@@ -9,7 +9,9 @@ This file is part of the SPECTRUM suite of scientific numerical simulation codes
 #ifndef TRAJECTORY_PARKER_HH
 #define TRAJECTORY_PARKER_HH
 
-#include "src/trajectory_base.hh"
+#include "trajectory_base.hh"
+#include <ANN/ANN.h>
+#include <fstream>
 
 namespace Spectrum {
 
@@ -17,7 +19,7 @@ namespace Spectrum {
 #define TRAJ_PARKER_STOCHASTIC_METHOD_DIFF 0
 
 //! Flag to use gradient and curvature drifts in drift velocity calculation
-// #define TRAJ_PARKER_USE_B_DRIFTS
+#define TRAJ_PARKER_USE_B_DRIFTS
 
 //! Which method of computation to use for divK: 0 = using direct central FD, 1 = using _spdata.grad quantities
 #define TRAJ_PARKER_DIVK_METHOD 0
@@ -40,14 +42,21 @@ const double cfl_acc_tp = 0.5;
 //! Maximum allowed fraction of momentum change per step
 const double dlnpmax = 0.01;
 
+//! current sheet points data file
+const std::string current_sheet_file = "current_sheet_points_subset_flat.txt";
+
+// 
+//! number of points in current sheet
+const int n_points_cs = 1399680;
+
 /*!
 \brief A derived class for Parker equation (diffusive simulation)
 \author Juan G Alonso Guzman
 
 Components of "traj_mom" are: p_mag (x), unused (y), unused (z)
 */
-class TrajectoryParker : public TrajectoryBase
-{
+class TrajectoryParker : public TrajectoryBase {
+
 protected:
 
 //! Drift velocity (transient)
@@ -67,6 +76,36 @@ protected:
 
 //! Stochastic increment in guiding center
    GeoVector dr_perp;
+
+//! Unit vector representing current sheet drift velocity
+   GeoVector cs_drift_unit_velocity;
+
+//! Larmor radius
+   double r_L;
+
+//! side of current sheet
+   double side_of_sheet;
+
+//! polarity of the solar cycle
+   double solar_cycle_polarity = 1.0;
+
+//! dataPts ANN object for current sheet points
+   ANNpointArray		dataPts;
+
+//! pointer to kdTree ANN object
+   ANNkd_tree*			kdTree;
+
+//! pointer to istream object for current sheet points
+   std::istream*    dataIn;
+
+//! ifstream object
+   std::ifstream cs_points_input_file;
+
+//! i_points
+   int i_points;
+
+//! whether current sheet data points are loaded or not
+   bool cs_data_loaded = false;
 
 //! Compute the basis vectors of the field aligned frame
    void FieldAlignedFrame(void);
@@ -138,3 +177,4 @@ typedef TrajectoryParker TrajectoryType;
 };
 
 #endif
+

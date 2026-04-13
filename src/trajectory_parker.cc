@@ -8,6 +8,7 @@ This file is part of the SPECTRUM suite of scientific numerical simulation codes
 
 #include "trajectory_parker.hh"
 #include "common/print_warn.hh"
+#include "drift_current_sheet.hh"
 
 namespace Spectrum {
 
@@ -63,6 +64,28 @@ void TrajectoryParker::SetStart(void)
 // Redefine mask
    _spdata._mask = BACKGROUND_U | BACKGROUND_B | BACKGROUND_gradU | BACKGROUND_gradB;
    spdata0._mask = BACKGROUND_U | BACKGROUND_B | BACKGROUND_gradU | BACKGROUND_gradB;
+
+   #ifdef TRAJ_PARKER_USE_B_DRIFTS
+   if(!cs_data_loaded) {
+      // Read data file and import KD tree
+      // at first: read-in hard-coded file name
+      cs_points_input_file.open(current_sheet_file, std::ios::in);
+      dataIn = &cs_points_input_file;
+      dataPts = annAllocPts(n_points_cs, 3);                       // allocate data points
+      i_points = 0;                                                                        // read data points
+
+      while (i_points < n_points_cs && readPt(*dataIn, dataPts[i_points])) {
+      i_points++;
+      }
+
+      kdTree = new ANNkd_tree(                                     // build search structure
+               dataPts,                                    // the data points
+               i_points,                                           // number of points
+               3);                                         // dimension of space
+
+      cs_data_loaded = true;
+   }
+   #endif
 };
 
 /*!
@@ -88,7 +111,7 @@ try {
    GeoVector pos_tmp;
    SpatialData spdata_forw, spdata_back;
    double Kperp_forw, Kperp_back, Kpara_forw, Kpara_back, Kappa_forw, Kappa_back;
-   double delta = fmin(Particle::LarmorRadius<specie>(_mom[0], _spdata.Bmag), _spdata.dmax);
+   double delta = fmin(LarmorRadius(_mom[0], _spdata.Bmag, specie), _spdata.dmax);
 
 // TODO: if the diffusion coefficients depend on more than just magnetic field, "spdata_xxxx._mask" should include more fields.
    spdata_forw._mask = BACKGROUND_U | BACKGROUND_B;
@@ -189,10 +212,29 @@ void TrajectoryParker::EulerDiffSlopes(void)
 void TrajectoryParker::DriftCoeff(void)
 {
 #ifdef TRAJ_PARKER_USE_B_DRIFTS
+// caclculate Larmor radius
+r_L = LarmorRadius(_mom[0], _spdata.Bmag, specie);
+// CALL current sheet drift calculation (input: _pos, r_L) --> polarity, cs drift unit velocity
+if ((_spdata.region[0] > -0.1) && (_spdata.Uvec.Norm() > 3.0)) {
+   CalculateCurrentSheetDrift(_pos, r_L, &cs_drift_unit_velocity, &side_of_sheet, &dataPts, kdTree);
+}
+else {
+   cs_drift_unit_velocity = gv_zeros;
+   if (_pos[2] >= 0.0) {
+      side_of_sheet = 1.0 * solar_cycle_polarity;
+   }
+   else {
+      side_of_sheet = -1.0 * solar_cycle_polarity;
+   };
+};
+
+
 // Compute |B|*curl(b/|B|)
-   drift_vel = (_spdata.curlB() - 2.0 * (_spdata.gradBmag ^ _spdata.bhat)) / _spdata.Bmag;
+   drift_vel = (_spdata.curlB() - 2.0 * (_spdata.gradBmag ^ _spdata.bhat)) * side_of_sheet / _spdata.Bmag; ;
 // Scale by pvc/3q|B| = r_L*v/3
-   drift_vel *= Particle::LarmorRadius<specie>(_mom[0], _spdata.Bmag) * _vel[0] / 3.0;
+   drift_vel *= r_L * _vel[0] / 3.0;
+// Add CS drift velocity
+   drift_vel += cs_drift_unit_velocity * _vel[0];
 // Scale magnitude to an upper limit of v/2 if necessary.
    if (drift_vel.Norm() > 0.5 * _vel[0]) {
       drift_vel.Normalize();
@@ -306,3 +348,4 @@ bool TrajectoryParker::Advance(void)
 };
 
 };
+

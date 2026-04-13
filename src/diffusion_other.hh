@@ -10,7 +10,7 @@ This file is part of the SPECTRUM suite of scientific numerical simulation codes
 #ifndef SPECTRUM_DIFFUSION_OTHER_HH
 #define SPECTRUM_DIFFUSION_OTHER_HH
 
-#include "src/diffusion_base.hh"
+#include "diffusion_base.hh"
 
 namespace Spectrum {
 
@@ -128,8 +128,6 @@ public:
 // DiffusionWNLTConstant class declaration
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 
-#ifdef USE_GSL
-
 //! Readable name of the DiffusionWNLTConstant class
 const std::string diff_name_wnlt_constant = "DiffusionWNLTConstant";
 
@@ -178,8 +176,6 @@ public:
 //! Clone function
    CloneFunctionDiffusion(DiffusionWNLTConstant);
 };
-
-#endif
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // DiffusionWNLTRampVLISM class declaration
@@ -806,6 +802,109 @@ public:
    double GetMuDerivative(void) override;
 };
 
+//! Readable name of the DiffusionStraussEtAl2013 class
+const std::string diff_name_sammy = "DiffusionSammy";
+
+class DiffusionSammy : public DiffusionBase {
+
+   protected:
+
+   int l_perp_index;
+
+   int del_b_index;
+
+   double kap_rat;
+
+   double R0;
+
+   double A;
+
+   double mu;
+
+
+//! Set up the diffusion model based on "params"
+   void SetupDiffusion(bool construct) override;
+
+//! Compute the diffusion coefficients
+   void EvaluateDiffusion(void) override;
+
+   public:
+//! Default constructor
+   DiffusionSammy(void);
+
+//! Copy constructor
+   DiffusionSammy(const DiffusionSammy& other);
+
+//! Destructor
+   ~DiffusionSammy() override = default;
+
+//! Clone function
+   CloneFunctionDiffusion(DiffusionSammy);
+
+//! Compute derivative of diffusion coefficient in mu
+   double GetMuDerivative(void) override;
+
+};
+
+class DiffusionFlo09LZP : public DiffusionBase {
+
+   protected:
+
+   double kap_rat;
+
+//! Set up the diffusion model based on "params"
+   void SetupDiffusion(bool construct) override;
+
+//! Compute the diffusion coefficients
+   void EvaluateDiffusion(void) override;
+
+   public:
+//! Default constructor
+   DiffusionFlo09LZP(void);
+
+//! Copy constructor
+   DiffusionFlo09LZP(const DiffusionFlo09LZP& other);
+
+//! Destructor
+   ~DiffusionFlo09LZP() override = default;
+
+//! Clone function
+   CloneFunctionDiffusion(DiffusionFlo09LZP);
+
+//! Compute derivative of diffusion coefficient in mu
+   double GetMuDerivative(void) override;
+
+};
+
+class DiffusionFlo09NLGC : public DiffusionBase {
+
+   protected:
+
+   double kap_rat;
+
+//! Set up the diffusion model based on "params"
+   void SetupDiffusion(bool construct) override;
+
+//! Compute the diffusion coefficients
+   void EvaluateDiffusion(void) override;
+
+   public:
+//! Default constructor
+   DiffusionFlo09NLGC(void);
+
+//! Copy constructor
+   DiffusionFlo09NLGC(const DiffusionFlo09NLGC& other);
+
+//! Destructor
+   ~DiffusionFlo09NLGC() override = default;
+
+//! Clone function
+   CloneFunctionDiffusion(DiffusionFlo09NLGC);
+
+//! Compute derivative of diffusion coefficient in mu
+   double GetMuDerivative(void) override;
+
+};
 };
 
 #endif

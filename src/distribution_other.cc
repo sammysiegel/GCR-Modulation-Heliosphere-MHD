@@ -7,9 +7,8 @@
 This file is part of the SPECTRUM suite of scientific numerical simulation codes. SPECTRUM stands for Space Plasma and Energetic Charged particle TRansport on Unstructured Meshes. The code simulates plasma or neutral particle flows using MHD equations on a grid, transport of cosmic rays using stochastic or grid based methods. The "unstructured" part refers to the use of a geodesic mesh providing a uniform coverage of the surface of a sphere.
 */
 
-#include "common/coordinates.hh"
+#include "distribution_other.hh"
 #include "common/physics.hh"
-#include "src/distribution_other.hh"
 
 namespace Spectrum {
 
@@ -201,7 +200,7 @@ void DistributionPositionUniform::EvaluateValue(void)
    if (val_time == 0) this->_value = this->_pos;
    else this->_value = this->_pos2;
 
-   if (val_coord == 1) Metric<CoordinateSystem::SphericalRTP>::PosToCurv(this->_value);
+   if (val_coord == 1) Metric<CoordinateSystem::Spherical>::PosToCurv(this->_value);
 };
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -418,12 +417,12 @@ void DistributionAnisotropyLISM::EvaluateValue(void)
 // Find incoming direction in specified coordinate frame
    mom_rel = this->_mom;
    mom_rel.ChangeToBasis(rot_matrix);
-   Metric<CoordinateSystem::SphericalRTP>::PosToCurv(mom_rel);
+   Metric<CoordinateSystem::Spherical>::PosToCurv(mom_rel);
    this->_value[0] = mom_rel[1];
    this->_value[1] = mom_rel[2];
 
 // Find relative momentum in LISM. Reuse "mom_rel" in EvaluateWeight().
-   mom_rel = this->_mom2 - Particler::RelFactor1<specie>(this->_mom2.Norm()) * specie.mass * U_LISM;
+   mom_rel = this->_mom2 - RelFactor1(this->_mom2.Norm(), this->specie) * mass[this->specie] * U_LISM;
 };
 
 /*!
@@ -553,11 +552,11 @@ void DistributionSpectrumKineticEnergyPowerLaw::SetupDistribution(bool construct
 void DistributionSpectrumKineticEnergyPowerLaw::EvaluateValue(void)
 {
 #if (TRAJ_TYPE == TRAJ_FOCUSED) || (TRAJ_TYPE == TRAJ_PARKER) || (TRAJ_TYPE == TRAJ_PARKER_SOURCE)
-   this->_value[0] = Particle::EnrKin<specie>(this->_mom[0]);
+   this->_value[0] = EnrKin(this->_mom[0], this->specie);
 #elif TRAJ_TYPE == TRAJ_FIELDLINE
-   this->_value[0] = Particle::EnrKin<specie>(this->_mom[2]);
+   this->_value[0] = EnrKin(this->_mom[2], this->specie);
 #elif (TRAJ_TYPE == TRAJ_LORENTZ) || (TRAJ_TYPE == TRAJ_GUIDING) || (TRAJ_TYPE == TRAJ_GUIDING_SCATT) || (TRAJ_TYPE == TRAJ_GUIDING_DIFF) || (TRAJ_TYPE == TRAJ_GUIDING_DIFF_SCATT)
-   this->_value[0] = Particle::EnrKin<specie>(this->_mom.Norm());
+   this->_value[0] = EnrKin(this->_mom.Norm(), this->specie);
 #endif
 };
 
@@ -576,10 +575,10 @@ void DistributionSpectrumKineticEnergyPowerLaw::SpectrumKineticEnergyPowerLawHot
 #elif (TRAJ_TYPE == TRAJ_LORENTZ) || (TRAJ_TYPE == TRAJ_GUIDING) || (TRAJ_TYPE == TRAJ_GUIDING_SCATT) || (TRAJ_TYPE == TRAJ_GUIDING_DIFF) || (TRAJ_TYPE == TRAJ_GUIDING_DIFF_SCATT)
    mom2mag = this->_mom2.Norm();
 #endif
-   kin_energy = Particle::EnrKin<specie>(mom2mag);
+   kin_energy = EnrKin(mom2mag, this->specie);
 
 #if DISTRO_KINETIC_ENERGY_POWER_LAW_TYPE == 0
-   double velocity = Particle::Vel<specie>(mom2mag);
+   double velocity = Vel(mom2mag, this->specie);
 // The power law is the differential density U=f(p)*p^2/v, but the weighting function is f(p) itself, so a division by p^2 and multiplication by v is required here.
    this->_weight = J0 * velocity * pow(kin_energy / T0, pow_law) / Sqr(mom2mag);
 #elif DISTRO_KINETIC_ENERGY_POWER_LAW_TYPE == 1
@@ -660,6 +659,134 @@ void DistributionSpectrumKineticEnergyBentPowerLaw::SpectrumKineticEnergyPowerLa
    DistributionSpectrumKineticEnergyPowerLaw::SpectrumKineticEnergyPowerLawHot();
 // The power law is the differential intensity J=f(p)*p^2, but the weighting function is f(p) itself, so a division by p^2 is required here.
    this->_weight /= pow(1.0 + pow(kin_energy / T_b, pow_law_comb), bend_smoothness);
+};
+
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+// DistributionSpectrumKineticEnergyLISM
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+
+/*!
+\author Vladimir Florinski
+\date 06/18/2021
+*/
+
+DistributionSpectrumKineticEnergyLISM::DistributionSpectrumKineticEnergyLISM(void)
+                                         : DistributionTemplated<double>(dist_name_spectrum_kinetic_energy_lism, 0, DISTRO_MOMENTUM)
+{
+};
+
+/*!
+\author Juan G Alonso Guzman
+\date 12/06/2023
+\param[in] name_in   Readable name of the class
+\param[in] specie_in Particle's specie
+\param[in] status_in Initial status
+*/
+
+DistributionSpectrumKineticEnergyLISM::DistributionSpectrumKineticEnergyLISM(const std::string& name_in, unsigned int specie_in, uint16_t status_in)
+                                         : DistributionTemplated<double>(name_in, specie_in, status_in)
+{
+};
+
+/*!
+\author Vladimir Florinski
+\date 05/13/2022
+\param[in] other Object to initialize from
+
+A copy constructor should first first call the Params' version to copy the data container and then check whether the other object has been set up. If yes, it should simply call the virtual method "SetupDistribution()" with the argument of "true".
+*/
+DistributionSpectrumKineticEnergyLISM::DistributionSpectrumKineticEnergyLISM(const DistributionSpectrumKineticEnergyLISM& other)
+                                         : DistributionTemplated<double>(other)
+{
+   RAISE_BITS(this->_status, DISTRO_MOMENTUM);
+   if (BITS_RAISED(other._status, STATE_SETUP_COMPLETE)) SetupDistribution(true);
+};
+
+/*!
+\author Vladimir Florinski
+\date 05/05/2022
+\param[in] construct Whether called from a copy constructor or separately
+*/
+void DistributionSpectrumKineticEnergyLISM::SetupDistribution(bool construct)
+{
+// The parent version must be called explicitly if not constructing
+   if (!construct) DistributionTemplated<double>::SetupDistribution(false);
+   if (BITS_LOWERED(this->_status, STATE_SETUP_COMPLETE)) return;
+
+   this->container.Read(J0);
+   this->container.Read(T0);
+   this->container.Read(a1);
+   this->container.Read(a2);
+   this->container.Read(a3);
+   this->container.Read(a4);
+   this->container.Read(c2);
+   this->container.Read(c3);
+   this->container.Read(c4);
+   this->container.Read(val_cold);
+
+// Place the actions into the table
+   this->ActionTable.push_back([this]() {SpectrumKineticEnergyLISMHot();});
+   this->ActionTable.push_back([this]() {SpectrumKineticEnergyLISMCold();});
+
+// Check that ONLY the first dimension is active.
+   if (this->dims != 1) LOWER_BITS(this->_status, STATE_SETUP_COMPLETE);
+};
+
+/*!
+\author Vladimir Florinski
+\date 05/05/2022
+*/
+void DistributionSpectrumKineticEnergyLISM::EvaluateValue(void)
+{
+#if (TRAJ_TYPE == TRAJ_FOCUSED) || (TRAJ_TYPE == TRAJ_PARKER) || (TRAJ_TYPE == TRAJ_PARKER_SOURCE)
+   this->_value[0] = EnrKin(this->_mom[0], this->specie);
+#elif TRAJ_TYPE == TRAJ_FIELDLINE
+   this->_value[0] = EnrKin(this->_mom[2], this->specie);
+#elif (TRAJ_TYPE == TRAJ_LORENTZ) || (TRAJ_TYPE == TRAJ_GUIDING) || (TRAJ_TYPE == TRAJ_GUIDING_SCATT) || (TRAJ_TYPE == TRAJ_GUIDING_DIFF) || (TRAJ_TYPE == TRAJ_GUIDING_DIFF_SCATT)
+   this->_value[0] = EnrKin(this->_mom.Norm(), this->specie);
+#endif
+};
+
+/*!
+\author Vladimir Florinski
+\author Juan G Alonso Guzman
+\date 01/04/2024
+*/
+void DistributionSpectrumKineticEnergyLISM::SpectrumKineticEnergyLISMHot(void)
+{
+   double mom2mag;
+#if (TRAJ_TYPE == TRAJ_FOCUSED) || (TRAJ_TYPE == TRAJ_PARKER) || (TRAJ_TYPE == TRAJ_PARKER_SOURCE)
+   mom2mag = this->_mom2[0];
+#elif TRAJ_TYPE == TRAJ_FIELDLINE
+   mom2mag = this->_mom2[2];
+#elif (TRAJ_TYPE == TRAJ_LORENTZ) || (TRAJ_TYPE == TRAJ_GUIDING) || (TRAJ_TYPE == TRAJ_GUIDING_SCATT) || (TRAJ_TYPE == TRAJ_GUIDING_DIFF) || (TRAJ_TYPE == TRAJ_GUIDING_DIFF_SCATT)
+   mom2mag = this->_mom2.Norm();
+#endif
+   kin_energy = EnrKin(mom2mag, this->specie);
+
+#if DISTRO_KINETIC_ENERGY_POWER_LAW_TYPE == 0
+   double velocity = Vel(mom2mag, this->specie);
+// The power law is the differential density U=f(p)*p^2/v, but the weighting function is f(p) itself, so a division by p^2 and multiplication by v is required here.
+   this->_weight = J0 * velocity * pow(kin_energy / T0, a1) / (1.0 + c2*pow(kin_energy / T0, a2) + c3*pow(kin_energy / T0, a3) + c4*pow(kin_energy / T0, a4)) / Sqr(mom2mag);
+#elif DISTRO_KINETIC_ENERGY_POWER_LAW_TYPE == 1
+// The power law is the differential intensity J=f(p)*p^2, but the weighting function is f(p) itself, so a division by p^2 is required here.
+   this->_weight = J0 * pow(kin_energy / T0, a1) / (1.0 + c2*pow(kin_energy / T0, a2) + c3*pow(kin_energy / T0, a3) + c4*pow(kin_energy / T0, a4)) / Sqr(mom2mag);
+#elif DISTRO_KINETIC_ENERGY_POWER_LAW_TYPE == 2
+// The power law is the distribution function f(p), no weighting necessary
+   this->_weight = J0 * pow(kin_energy / T0, a1) / (1.0 + c2*pow(kin_energy / T0, a2) + c3*pow(kin_energy / T0, a3) + c4*pow(kin_energy / T0, a4));
+#else
+   std::cerr << "DistributionSpectrumKineticEnergyLISM Error: TYPE not recognized." << std::endl;
+#endif
+};
+
+/*!
+\author Vladimir Florinski
+\date 05/17/2022
+*/
+void DistributionSpectrumKineticEnergyLISM::SpectrumKineticEnergyLISMCold(void)
+{
+   this->_weight = val_cold;
 };
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -848,7 +975,7 @@ void DistributionLossCone::EvaluateValue(void)
    if (val_time == 0) this->_value = this->_pos;
    else this->_value = this->_pos2;
 
-   if (val_coord == 1) Metric<CoordinateSystem::SphericalRTP>::PosToCurv(this->_value);
+   if (val_coord == 1) Metric<CoordinateSystem::Spherical>::PosToCurv(this->_value);
 };
 
 /*!

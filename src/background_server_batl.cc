@@ -29,7 +29,7 @@ BackgroundServerBATL::BackgroundServerBATL(void)
 \date 10/05/2022
 \param[in] other Object to initialize from
 
-A copy constructor should first call the Params' version to copy the data container and then check whether the other object has been set up. If yes, it should simply call the virtual method "SetupBackground()" with the argument of "true".
+A copy constructor should first first call the Params' version to copy the data container and then check whether the other object has been set up. If yes, it should simply call the virtual method "SetupBackground()" with the argument of "true".
 */
 BackgroundServerBATL::BackgroundServerBATL(const BackgroundServerBATL& other)
                     : BackgroundServerCartesian(other)

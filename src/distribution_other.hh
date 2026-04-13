@@ -10,7 +10,9 @@ This file is part of the SPECTRUM suite of scientific numerical simulation codes
 #ifndef SPECTRUM_DISTRIBUTION_OTHER_HH
 #define SPECTRUM_DISTRIBUTION_OTHER_HH
 
-#include "src/distribution_templated.hh"
+#include "distribution_templated.hh"
+#include "geometry/coordinates.hh"
+#include "common/physics.hh"
 
 namespace Spectrum {
 
@@ -322,7 +324,7 @@ public:
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 
 //! Flag to define power law spectrum as differential density 0, differential intensity 1, or distribution function 2
-#define DISTRO_KINETIC_ENERGY_POWER_LAW_TYPE 0
+#define DISTRO_KINETIC_ENERGY_POWER_LAW_TYPE 1
 
 //! Readable name of the DistributionSpectrumKineticEnergyPowerLaw class
 const std::string dist_name_spectrum_kinetic_energy_power_law = "DistributionSpectrumKineticEnergyPowerLaw";
@@ -429,6 +431,76 @@ public:
 
 //! Clone function
    CloneFunctionDistribution(DistributionSpectrumKineticEnergyBentPowerLaw);
+};
+
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+// DistributionSpectrumKineticEnergyLISM class declaration
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+
+//! Readable name of the DistributionSpectrumKineticEnergyPowerLaw class
+const std::string dist_name_spectrum_kinetic_energy_lism = "DistributionSpectrumKineticEnergyLISM";
+
+/*!
+\brief Differential intensity as a specified function of kinetic energy J(T)
+\author Vladimir Florinski
+
+Type: 1D momentum
+Parameters: (DistributionTemplated), double J0, double T0, double pow_law, double val_cold
+*/
+class DistributionSpectrumKineticEnergyLISM : public DistributionTemplated<double> {
+
+protected:
+
+//! Normalization for the "hot" boundary (persistent)
+   double J0;
+
+//! Characteristic energy (persistent)
+   double T0;
+
+//! Spectral power law (persistent)
+   double a1;
+   double a2;
+   double a3;
+   double a4;
+   double c2;
+   double c3;
+   double c4;
+
+//! Constant value for the "cold" condition (persistent)
+   double val_cold;
+
+//! Kinetic energy at binning (transient)
+   double kin_energy;
+
+//! Set up the distribution accumulator based on "params"
+   void SetupDistribution(bool construct) override;
+
+//! Determine the value to be binned from a phase space position and other arguments
+   void EvaluateValue(void) override;
+
+//! Weight from a "hot" boundary
+   virtual void SpectrumKineticEnergyLISMHot(void);
+
+//! Weight from a "cold" boundary
+   void SpectrumKineticEnergyLISMCold(void);
+
+public:
+
+//! Default constructor
+   DistributionSpectrumKineticEnergyLISM(void);
+
+//! Constructor with arguments (to speed up construction of derived classes)
+   DistributionSpectrumKineticEnergyLISM(const std::string& name_in, unsigned int specie_in, uint16_t status_in);
+
+//! Copy constructor
+   DistributionSpectrumKineticEnergyLISM(const DistributionSpectrumKineticEnergyLISM& other);
+
+//! Destructor
+   ~DistributionSpectrumKineticEnergyLISM() override = default;
+
+//! Clone function
+   CloneFunctionDistribution(DistributionSpectrumKineticEnergyLISM);
 };
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------

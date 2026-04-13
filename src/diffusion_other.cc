@@ -7,10 +7,9 @@
 This file is part of the SPECTRUM suite of scientific numerical simulation codes. SPECTRUM stands for Space Plasma and Energetic Charged particle TRansport on Unstructured Meshes. The code simulates plasma or neutral particle flows using MHD equations on a grid, transport of cosmic rays using stochastic or grid based methods. The "unstructured" part refers to the use of a geodesic mesh providing a uniform coverage of the surface of a sphere.
 */
 
-#include "src/diffusion_other.hh"
-#ifdef USE_GSL
+#include "diffusion_other.hh"
 #include <gsl/gsl_sf_hyperg.h>
-#endif
+#include "common/print_warn.hh"
 
 namespace Spectrum {
 
@@ -156,8 +155,6 @@ void DiffusionQLTConstant::EvaluateDiffusion(void)
 // DiffusionWNLTConstant methods
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 
-#ifdef USE_GSL
-
 /*!
 \author Vladimir Florinski
 \date 05/06/2022
@@ -241,8 +238,6 @@ void DiffusionWNLTConstant::EvaluateDiffusion(void)
       Kappa[2] += (ps_minus / ps_plus) * Omega * st2 * A2T * DT1 * DT2 / sqrt(Sqr(DT1) + Sqr(DT2));
    };
 };
-
-#endif
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // DiffusionWNLTRampVLISM methods
@@ -630,8 +625,8 @@ void DiffusionFlowMomentumPowerLaw::EvaluateDiffusion(void)
 \author Juan G Alonso Guzman
 \author Swati Sharma
 \date 01/03/2025
-\param[in] xyz Index for which derivative to take (0 = x, 1 = y, 2 = z, else = t)
-\return Directional derivative
+\param[in] xyz       Index for which derivative to take (0 = x, 1 = y, 2 = z, else = t)
+\return double       Directional derivative
 \note This is meant to be called after GetComponent() for the component for which the derivative is wanted
 */
 double DiffusionFlowMomentumPowerLaw::GetDirectionalDerivative(int xyz)
@@ -645,7 +640,7 @@ double DiffusionFlowMomentumPowerLaw::GetDirectionalDerivative(int xyz)
 \author Juan G Alonso Guzman
 \author Swati Sharma
 \date 01/03/2025
-\return Derivative in mu
+\return double       Derivative in mu
 */
 double DiffusionFlowMomentumPowerLaw::GetMuDerivative(void)
 {
@@ -708,25 +703,23 @@ void DiffusionKineticEnergyRadialDistancePowerLaw::SetupDiffusion(bool construct
 /*!
 \author Juan G Alonso Guzman
 \author Swati Sharma
-\date 11/14/2025
+\date 06/25/2025
 */
 void DiffusionKineticEnergyRadialDistancePowerLaw::EvaluateDiffusion(void)
 {
-   if (comp_eval == 2) return;
    double r = _pos.Norm();
-   double kap_mom = kap0 * pow(Particle::EnrKin<specie>(_mom[0]) / T0, pow_law_T);
-   
-   if (stream_dep_idx == 0 || r < r0) Kappa[1] = kap_mom * pow(r / r0, pow_law_r);
-   else if (r < r0 + w_sh) Kappa[1] = kap_mom * Sqr(_spdata.Uvec.Norm() / u_up);
-   else Kappa[1] = kap_mom * dn_up_rat;
+   if (comp_eval == 2) return;
+   if (stream_dep_idx == 0 || r < r0) Kappa[1] = kap0 * pow(EnrKin(_mom[0], specie) / T0, pow_law_T) * pow(r / r0, pow_law_r);
+   else if (r < r0 + w_sh) Kappa[1] = kap0 * pow(EnrKin(_mom[0], specie) / T0, pow_law_T) * Sqr(_spdata.Uvec.Norm() / u_up);
+   else Kappa[1] = kap0 * pow(EnrKin(_mom[0], specie) / T0, pow_law_T) * dn_up_rat;
    Kappa[0] = kap_rat * Kappa[1];
 };
 
 /*!
 \author Juan G Alonso Guzman
 \date 02/18/2025
-\param[in] xyz Index for which derivative to take (0 = x, 1 = y, 2 = z, else = t)
-\return Directional derivative
+\param[in] xyz       Index for which derivative to take (0 = x, 1 = y, 2 = z, else = t)
+\return double       Directional derivative
 \note This is meant to be called after GetComponent() for the component for which the derivative is wanted
 */
 double DiffusionKineticEnergyRadialDistancePowerLaw::GetDirectionalDerivative(int xyz)
@@ -744,7 +737,7 @@ double DiffusionKineticEnergyRadialDistancePowerLaw::GetDirectionalDerivative(in
 /*!
 \author Juan G Alonso Guzman
 \date 05/13/2024
-\return Derivative in mu
+\return double       Derivative in mu
 */
 double DiffusionKineticEnergyRadialDistancePowerLaw::GetMuDerivative(void)
 {
@@ -804,7 +797,7 @@ void DiffusionRigidityMagneticFieldPowerLaw::SetupDiffusion(bool construct)
 void DiffusionRigidityMagneticFieldPowerLaw::EvaluateDiffusion(void)
 {
    if (comp_eval == 2) return;
-   Kappa[1] = (lam0 * vmag / 3.0) * pow(Particle::Rigidity<specie>(_mom[0]) / R0, pow_law_R) * pow(_spdata.Bmag / B0, pow_law_B);
+   Kappa[1] = (lam0 * vmag / 3.0) * pow(Rigidity(_mom[0], specie) / R0, pow_law_R) * pow(_spdata.Bmag / B0, pow_law_B);
    Kappa[0] = kap_rat * Kappa[1];
 };
 
@@ -892,7 +885,7 @@ void DiffusionStraussEtAl2013::EvaluateDiffusion(void)
    else LISM_ind = (_spdata.region[LISM_idx] > 0.0 ? 0.0 : 1.0);
    double lam_para = LISM_ind * lam_out + (1.0 - LISM_ind) * lam_in;
    double B0_eff = LISM_ind * _spdata.Bmag + (1.0 - LISM_ind) * B0;
-   double rig = Particle::Rigidity<specie>(_mom[0]);
+   double rig = Rigidity(_mom[0], specie);
    double kap_rat;
 
 // Find diffusion coefficients
@@ -962,8 +955,7 @@ void DiffusionPotgieterEtAl2015::SetupDiffusion(bool construct)
 
 /*!
 \author Juan G Alonso Guzman
-\author Vladimir Florinski
-\date 11/14/2025
+\date 01/09/2025
 */
 void DiffusionPotgieterEtAl2015::EvaluateDiffusion(void)
 {
@@ -974,11 +966,11 @@ void DiffusionPotgieterEtAl2015::EvaluateDiffusion(void)
    else LISM_ind = (_spdata.region[LISM_idx] > 0.0 ? 0.0 : 1.0);
    double kappa_para = LISM_ind * kappa_out + (1.0 - LISM_ind) * kappa_in;
    double B0_eff = LISM_ind * _spdata.Bmag + (1.0 - LISM_ind) * B0;
-   double rig = Particle::Rigidity<specie>(_mom[0]);
+   double rig = Rigidity(_mom[0], specie);
    double kap_rat;
 
 // Find diffusion coefficients
-   Kappa[1] = kappa_para * (vmag / Particle::c_code) * (rig < R0 ? 1.0 : sqrt(Cube(rig / R0))) * (B0_eff / _spdata.Bmag);
+   Kappa[1] = kappa_para * (vmag / c_code) * (rig < R0 ? 1.0 : sqrt(Cube(rig / R0))) * (B0_eff / _spdata.Bmag);
    if (comp_eval == 0) {
       kap_rat = LISM_ind * kap_rat_out + (1.0 - LISM_ind) * kap_rat_in;
       Kappa[0] = kap_rat * Kappa[1];
@@ -988,7 +980,7 @@ void DiffusionPotgieterEtAl2015::EvaluateDiffusion(void)
 /*!
 \author Juan G Alonso Guzman
 \date 01/09/2025
-\return Derivative in mu
+\return double       Derivative in mu
 */
 double DiffusionPotgieterEtAl2015::GetMuDerivative(void)
 {
@@ -1049,8 +1041,8 @@ void DiffusionEmpiricalSOQLTandUNLT::SetupDiffusion(bool construct)
 void DiffusionEmpiricalSOQLTandUNLT::EvaluateDiffusion(void)
 {
    if (comp_eval == 2) return;
-   double lam = 0.0, rig_dep = 0.0;
-   double rig = Particle::Rigidity<specie>(_mom[0]);
+   double lam, rig_dep;
+   double rig = Rigidity(_mom[0], specie);
 
    if (comp_eval == 1) {
 // Compute mean free path and rigidity dependance with a bent power law
@@ -1077,6 +1069,152 @@ void DiffusionEmpiricalSOQLTandUNLT::EvaluateDiffusion(void)
 \return double       Derivative in mu
 */
 double DiffusionEmpiricalSOQLTandUNLT::GetMuDerivative(void)
+{
+   return 0.0;
+};
+
+DiffusionSammy::DiffusionSammy(void)
+                        : DiffusionBase(diff_name_sammy, 0, STATE_NONE)
+{
+};
+
+/*! A copy constructor should first first call the Params' version to copy the data container and then check whether the other object has been set up. If yes, it should simply call the virtual method "SetupDiffusion()" with the argument of "true".
+*/
+DiffusionSammy::DiffusionSammy(const DiffusionSammy& other)
+                        : DiffusionBase(other)
+{
+   RAISE_BITS(_status, STATE_NONE);
+   if(BITS_RAISED(other._status, STATE_SETUP_COMPLETE)) SetupDiffusion(true);
+};
+
+/*! This method's main role is to unpack the data container and set up the class data members and status bits marked as "persistent". The function should assume that the data container is available because the calling function will always ensure this.
+*/
+void DiffusionSammy::SetupDiffusion(bool construct)
+{
+// The parent version must be called explicitly if not constructing
+   if(!construct) DiffusionBase::SetupDiffusion(false);
+   container.Read(l_perp_index);
+   container.Read(del_b_index);
+   container.Read(kap_rat);
+   container.Read(R0);
+   container.Read(A);
+   container.Read(mu);
+};
+
+void DiffusionSammy::EvaluateDiffusion(void)
+{
+   double l_perp = _spdata.region[l_perp_index] * 0.128;
+   double del_b = (sqrt(_spdata.region[del_b_index])/21.81) * 1e-5 / unit_magnetic_fluid;
+   if((comp_eval == 2)) return;
+   if (_spdata.Uvec.Norm() > 3.0) {
+      Kappa[1] = ((3.0 * Cube(vmag) * Sqr(_spdata.Bmag))/(20.0 * l_perp * Sqr(Omega) * Sqr(del_b) * sin(3.0 * M_1_PI/5.0)))
+                                    * (1.0 + (72.0/7.0)*pow(l_perp / LarmorRadius(_mom[0], _spdata.Bmag, specie) , 1.667));
+      Kappa[0] = 1.1 * pow((Sqr(del_b) * l_perp * vmag)/(3.0 * Sqr(_spdata.Bmag)), 0.667) * pow(Kappa[1], 0.333);
+   }
+   else {
+      Kappa[1] = (
+         (1 / 9.7705) * pow(GSL_CONST_CGSM_SPEED_OF_LIGHT * GSL_CONST_CGSM_MASS_PROTON * GSL_CONST_CGSM_MASS_PROTON / SPC_CONST_CGSM_ELECTRON_CHARGE, 0.333)
+         * pow(RelFactor1(_mom[0]), 0.333) * vmag * vmag * unit_velocity_fluid * unit_velocity_fluid
+         * pow(0.02 * unit_length_fluid, 0.667)
+         * 0.144
+         / (0.03 * 1e-5)
+      );
+      //Kappa[1] = ((1.0 / 9.7705) * pow(c_code * Sqr(SpeciesMasses[specie]) / SpeciesCharges[specie], 0.333)
+      //            * pow(RelFactor1(_mom[0], specie), 0.333) * Sqr(vmag) * pow(0.003 / unit_number_density_fluid) * pow(0.02, 0.667) / (0.03 * 1e-5 /unit_magnetic_fluid));
+      Kappa[0] = 1.1 * pow((Sqr(0.03 * 1e-5 / unit_magnetic_fluid) * l_perp * vmag)/(3.0 * Sqr(_spdata.Bmag)), 0.667) * pow(Kappa[1], 0.333);
+   };
+   Kappa[1] = Kappa[1] * A * pow(Rigidity(_mom[0], specie) / R0, mu);
+   Kappa[0] = kap_rat * Kappa[1];
+};
+
+double DiffusionSammy::GetMuDerivative(void)
+{
+   return 0.0;
+};
+
+DiffusionFlo09LZP::DiffusionFlo09LZP(void)
+                        : DiffusionBase(diff_name_sammy, 0, STATE_NONE)
+{
+};
+
+/*! A copy constructor should first first call the Params' version to copy the data container and then check whether the other object has been set up. If yes, it should simply call the virtual method "SetupDiffusion()" with the argument of "true".
+*/
+DiffusionFlo09LZP::DiffusionFlo09LZP(const DiffusionFlo09LZP& other)
+                        : DiffusionBase(other)
+{
+   RAISE_BITS(_status, STATE_NONE);
+   if(BITS_RAISED(other._status, STATE_SETUP_COMPLETE)) SetupDiffusion(true);
+};
+
+/*! This method's main role is to unpack the data container and set up the class data members and status bits marked as "persistent". The function should assume that the data container is available because the calling function will always ensure this.
+*/
+void DiffusionFlo09LZP::SetupDiffusion(bool construct)
+{
+// The parent version must be called explicitly if not constructing
+   if(!construct) DiffusionBase::SetupDiffusion(false);
+   //container.Read(kap_rat);
+};
+
+void DiffusionFlo09LZP::EvaluateDiffusion(void)
+{
+   double vmag = Vel(_mom[0]);
+   double delb = 3e-12 * _spdata.n_dens;
+   if((comp_eval == 2)) return;
+   Kappa[1] = (27.0/35.0) * pow(LarmorRadius(_mom[0], _spdata.Bmag, specie)*unit_length_fluid * 0.05 * 0.05 * unit_length_fluid * unit_length_fluid, 0.333) * vmag * unit_velocity_fluid * _spdata.Bmag * _spdata.Bmag * unit_magnetic_fluid * unit_magnetic_fluid * (10.0/delb)
+                                * ((7.0/27.0) * pow(LarmorRadius(_mom[0], _spdata.Bmag, specie)/0.05, 1.67) + 1.0);
+   Kappa[0] = 0.03 * delb * Kappa[1] / (_spdata.Bmag * _spdata.Bmag * unit_magnetic_fluid * unit_magnetic_fluid);
+   Kappa[1] = Kappa[1] / unit_diffusion_fluid;
+   Kappa[0] = Kappa[0] / unit_diffusion_fluid;
+};
+
+double DiffusionFlo09LZP::GetMuDerivative(void)
+{
+   return 0.0;
+};
+
+DiffusionFlo09NLGC::DiffusionFlo09NLGC(void)
+                        : DiffusionBase(diff_name_sammy, 0, STATE_NONE)
+{
+};
+
+/*! A copy constructor should first first call the Params' version to copy the data container and then check whether the other object has been set up. If yes, it should simply call the virtual method "SetupDiffusion()" with the argument of "true".
+*/
+DiffusionFlo09NLGC::DiffusionFlo09NLGC(const DiffusionFlo09NLGC& other)
+                        : DiffusionBase(other)
+{
+   RAISE_BITS(_status, STATE_NONE);
+   if(BITS_RAISED(other._status, STATE_SETUP_COMPLETE)) SetupDiffusion(true);
+};
+
+/*! This method's main role is to unpack the data container and set up the class data members and status bits marked as "persistent". The function should assume that the data container is available because the calling function will always ensure this.
+*/
+void DiffusionFlo09NLGC::SetupDiffusion(bool construct)
+{
+// The parent version must be called explicitly if not constructing
+   if(!construct) DiffusionBase::SetupDiffusion(false);
+   //container.Read(kap_rat);
+};
+
+void DiffusionFlo09NLGC::EvaluateDiffusion(void)
+{
+   double vmag = Vel(_mom[0]);
+   double delb = 5e-12 * _spdata.n_dens;
+   if((comp_eval == 2)) return;
+   if (_spdata.Uvec.Norm() > 3.0) {
+      Kappa[1] = (27.0/35.0) * pow(LarmorRadius(_mom[0], _spdata.Bmag, specie)*unit_length_fluid * 0.1 * 0.1 * unit_length_fluid * unit_length_fluid, 0.333) * vmag * unit_velocity_fluid * _spdata.Bmag * _spdata.Bmag * unit_magnetic_fluid * unit_magnetic_fluid * (10/delb)
+                                * ((7.0/27.0) * pow(LarmorRadius(_mom[0], _spdata.Bmag, specie)/0.1, 1.67) + 1.0);
+      Kappa[0] = 1.1 * pow((delb * 0.1 * unit_length_fluid * vmag * unit_velocity_fluid)/(_spdata.Bmag * _spdata.Bmag * unit_magnetic_fluid * unit_magnetic_fluid * 3.0), 0.667) * pow(Kappa[1], 0.333);
+   }
+   else{
+      Kappa[1] = (27.0/35.0) * pow(LarmorRadius(_mom[0], _spdata.Bmag, specie)*unit_length_fluid * 0.033 * 0.033 * unit_length_fluid * unit_length_fluid, 0.333) * vmag * unit_velocity_fluid * _spdata.Bmag * _spdata.Bmag * unit_magnetic_fluid * unit_magnetic_fluid * (10/delb)
+                                * ((7.0/27.0) * pow(LarmorRadius(_mom[0], _spdata.Bmag, specie)/0.033, 1.67) + 1.0);
+      Kappa[0] = 1.1 * pow((delb * 0.033 * unit_length_fluid * vmag * unit_velocity_fluid)/(_spdata.Bmag * _spdata.Bmag * unit_magnetic_fluid * unit_magnetic_fluid * 3.0), 0.667) * pow(Kappa[1], 0.333);
+   }
+   Kappa[1] = Kappa[1] / unit_diffusion_fluid;
+   Kappa[0] = Kappa[0] / unit_diffusion_fluid;
+};
+
+double DiffusionFlo09NLGC::GetMuDerivative(void)
 {
    return 0.0;
 };
