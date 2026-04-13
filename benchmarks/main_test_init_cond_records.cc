@@ -1,13 +1,12 @@
-#include <iostream>
-#include <iomanip>
-
+#include "src/simulation.hh"
+#include "src/distribution_other.hh"
 #include "src/background_uniform.hh"
 #include "src/boundary_time.hh"
 #include "src/initial_time.hh"
 #include "src/initial_space.hh"
 #include "src/initial_momentum.hh"
-#include "src/distribution_other.hh"
-#include "src/simulation.hh"
+#include <iostream>
+#include <iomanip>
 
 using namespace Spectrum;
 
@@ -27,7 +26,8 @@ int main(int argc, char** argv)
 // Particle type
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 
-   Specie<default_specie> specie;
+   int specie = SPECIES_PROTON_BEAM;
+   simulation->SetSpecie(specie);
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // Background
@@ -46,7 +46,7 @@ int main(int argc, char** argv)
    container.Insert(gv_zeros);
 
 // Magnetic field
-   double Bmag = 1.0 / Particle::unit_magnetic;
+   double Bmag = 1.0 / unit_magnetic_fluid;
    GeoVector B0(0.0, 0.0, Bmag);
    container.Insert(B0);
 
@@ -63,11 +63,11 @@ int main(int argc, char** argv)
    container.Clear();
 
 // Start time for interval
-   double start_t = -5.0 / Particle::unit_time;
+   double start_t = -5.0 / unit_time_fluid;
    container.Insert(start_t);
 
 // End time for interval
-   double end_t = 5.0 / Particle::unit_time;
+   double end_t = 5.0 / unit_time_fluid;
    container.Insert(end_t);
 
 // Number of subintervals (0 for random points)
@@ -84,7 +84,7 @@ int main(int argc, char** argv)
 
    container.Insert(gv_zeros);
 
-   double radius = 1.0 / Particle::unit_length;
+   double radius = GSL_CONST_CGSM_ASTRONOMICAL_UNIT / unit_length_fluid;
    container.Insert(radius);
 
    simulation->AddInitial(InitialSpaceSphere(), container);
@@ -96,7 +96,7 @@ int main(int argc, char** argv)
    container.Clear();
 
 // Initial momentum
-   double momentum = Particle::Mom<specie>(100.0 * SPC_CONST_CGSM_MEGA_ELECTRON_VOLT / Particle::unit_energy);
+   double momentum = Mom(100.0 * SPC_CONST_CGSM_MEGA_ELECTRON_VOLT / unit_energy_particle, specie);
    container.Insert(momentum);
 
    double theta = DegToRad(90.0);
@@ -121,7 +121,7 @@ int main(int argc, char** argv)
    container.Insert(actions_time);
    
 // Duration of the trajectory
-   double maxtime = 10.0 / Particle::unit_time;
+   double maxtime = 10.0 / unit_time_fluid;
    container.Insert(maxtime);
 
    simulation->AddBoundary(BoundaryTimeExpire(), container);
@@ -158,7 +158,7 @@ int main(int argc, char** argv)
    container.Insert(unit_distro1);
 
 // Physical units of the bin variable
-   GeoVector unit_val1 = {Particle::unit_time, 1.0, 1.0};
+   GeoVector unit_val1 = {unit_time_fluid, 1.0, 1.0};
    container.Insert(unit_val1);
 
 // Don't keep records
@@ -211,10 +211,10 @@ int main(int argc, char** argv)
    container.Insert(unit_distro2);
 
 // Physical units of the bin variable
-   GeoVector unit_val2 = {Particle::unit_length, Particle::unit_length, Particle::unit_length};
+   GeoVector unit_val2 = {unit_length_fluid, unit_length_fluid, unit_length_fluid};
    container.Insert(unit_val2);
 
-// Keep records
+// Don't keep records
    bool keep_records2 = true;
    container.Insert(keep_records2);
 
@@ -252,7 +252,7 @@ int main(int argc, char** argv)
    simulation->SetTasks(n_traj, batch_size);
    simulation->MainLoop();
    simulation->PrintDistro1D(0, 0, simulation_files_prefix + "init_time.dat", true);
-   simulation->PrintRecords(1, simulation_files_prefix + "pos_records.dat", true);
+   simulation->PrintRecords(1, simulation_files_prefix + "pos_records.dat", false);
 
    if(MPI_Config::is_master) {
       std::cout << std::endl;

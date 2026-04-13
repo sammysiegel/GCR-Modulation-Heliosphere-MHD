@@ -1,0 +1,1259 @@
+PERPENDICULAR DIFFUSION --- Tue Nov 11 13:24:48 CST 2025
+------------------------------------------------------------
+checking for a BSD-compatible install... /usr/bin/install -c
+checking whether build environment is sane... yes
+checking for a thread-safe mkdir -p... /usr/bin/mkdir -p
+checking for gawk... gawk
+checking whether make sets $(MAKE)... yes
+checking whether make supports nested variables... yes
+checking for gcc... gcc
+checking whether the C compiler works... yes
+checking for C compiler default output file name... a.out
+checking for suffix of executables... 
+checking whether we are cross compiling... no
+checking for suffix of object files... o
+checking whether we are using the GNU C compiler... yes
+checking whether gcc accepts -g... yes
+checking for gcc option to accept ISO C89... none needed
+checking whether gcc understands -c and -o together... yes
+checking whether make supports the include directive... yes (GNU style)
+checking dependency style of gcc... gcc3
+checking for g++... g++
+checking whether we are using the GNU C++ compiler... yes
+checking whether g++ accepts -g... yes
+checking dependency style of g++... gcc3
+checking for gfortran... gfortran
+checking whether we are using the GNU Fortran compiler... yes
+checking whether gfortran accepts -g... yes
+checking for pkg-config... /usr/bin/pkg-config
+checking pkg-config is at least version 0.9.0... yes
+checking for MPI... yes
+checking for GSL... yes
+configure: SILO is disabled
+checking for library containing slurm_get_rem_time... no
+configure: WARNING: SLURM library was not found.
+configure: Using "PARALLEL" as the simulation execution type
+configure: Using "GUIDING_DIFF" as the trajectory model
+configure: Using "FORWARD" as the trajectory time flow direction
+configure: Using "29" as the Runge-Kutta method
+configure: Using "SELF" as the background server
+configure: Using "" as the background server interpolation order
+configure: Using "" as the background server number of ghost cells per side of block
+checking how to run the C++ preprocessor... g++ -E
+checking for grep that handles long lines and -e... /usr/bin/grep
+checking for egrep... /usr/bin/grep -E
+checking for ANSI C header files... yes
+checking for sys/types.h... yes
+checking for sys/stat.h... yes
+checking for stdlib.h... yes
+checking for string.h... yes
+checking for memory.h... yes
+checking for strings.h... yes
+checking for inttypes.h... yes
+checking for stdint.h... yes
+checking for unistd.h... yes
+checking for stdbool.h that conforms to C99... no
+checking for _Bool... no
+checking for inline... inline
+checking for size_t... yes
+checking for uint32_t... yes
+checking for uint8_t... yes
+checking for memset... yes
+checking for pow... yes
+checking for sqrt... yes
+configure: CUDA is disabled
+checking that generated files are newer than configure... done
+configure: creating ./config.status
+config.status: creating Makefile
+config.status: creating runs/Makefile
+config.status: creating tests/Makefile
+config.status: creating benchmarks/Makefile
+config.status: creating config.h
+config.status: executing depfiles commands
+
+CONFIGURATION
+========================================
+completed
+========================================
+
+/data001/cosmicrays_vf/Sammy/SPECTRUM/benchmarks
+depbase=`echo main_test_perp_diff.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT main_test_perp_diff.o -MD -MP -MF $depbase.Tpo -c -o main_test_perp_diff.o main_test_perp_diff.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo ../src/simulation.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT ../src/simulation.o -MD -MP -MF $depbase.Tpo -c -o ../src/simulation.o ../src/simulation.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo ../src/distribution_other.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT ../src/distribution_other.o -MD -MP -MF $depbase.Tpo -c -o ../src/distribution_other.o ../src/distribution_other.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo ../src/distribution_templated.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT ../src/distribution_templated.o -MD -MP -MF $depbase.Tpo -c -o ../src/distribution_templated.o ../src/distribution_templated.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo ../src/distribution_base.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT ../src/distribution_base.o -MD -MP -MF $depbase.Tpo -c -o ../src/distribution_base.o ../src/distribution_base.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo ../src/trajectory_guiding_diff.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT ../src/trajectory_guiding_diff.o -MD -MP -MF $depbase.Tpo -c -o ../src/trajectory_guiding_diff.o ../src/trajectory_guiding_diff.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo ../src/trajectory_guiding.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT ../src/trajectory_guiding.o -MD -MP -MF $depbase.Tpo -c -o ../src/trajectory_guiding.o ../src/trajectory_guiding.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo ../src/trajectory_base.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT ../src/trajectory_base.o -MD -MP -MF $depbase.Tpo -c -o ../src/trajectory_base.o ../src/trajectory_base.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo ../src/background_uniform.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT ../src/background_uniform.o -MD -MP -MF $depbase.Tpo -c -o ../src/background_uniform.o ../src/background_uniform.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo ../src/background_base.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT ../src/background_base.o -MD -MP -MF $depbase.Tpo -c -o ../src/background_base.o ../src/background_base.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo ../src/background_base_visual.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT ../src/background_base_visual.o -MD -MP -MF $depbase.Tpo -c -o ../src/background_base_visual.o ../src/background_base_visual.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo ../src/boundary_time.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT ../src/boundary_time.o -MD -MP -MF $depbase.Tpo -c -o ../src/boundary_time.o ../src/boundary_time.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo ../src/boundary_space.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT ../src/boundary_space.o -MD -MP -MF $depbase.Tpo -c -o ../src/boundary_space.o ../src/boundary_space.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo ../src/boundary_base.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT ../src/boundary_base.o -MD -MP -MF $depbase.Tpo -c -o ../src/boundary_base.o ../src/boundary_base.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo ../src/initial_time.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT ../src/initial_time.o -MD -MP -MF $depbase.Tpo -c -o ../src/initial_time.o ../src/initial_time.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo ../src/initial_space.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT ../src/initial_space.o -MD -MP -MF $depbase.Tpo -c -o ../src/initial_space.o ../src/initial_space.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo ../src/initial_momentum.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT ../src/initial_momentum.o -MD -MP -MF $depbase.Tpo -c -o ../src/initial_momentum.o ../src/initial_momentum.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo ../src/initial_base.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT ../src/initial_base.o -MD -MP -MF $depbase.Tpo -c -o ../src/initial_base.o ../src/initial_base.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo ../src/diffusion_other.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT ../src/diffusion_other.o -MD -MP -MF $depbase.Tpo -c -o ../src/diffusion_other.o ../src/diffusion_other.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo ../src/diffusion_base.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT ../src/diffusion_base.o -MD -MP -MF $depbase.Tpo -c -o ../src/diffusion_base.o ../src/diffusion_base.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo ../src/source_base.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT ../src/source_base.o -MD -MP -MF $depbase.Tpo -c -o ../src/source_base.o ../src/source_base.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo ../common/mpi_config.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT ../common/mpi_config.o -MD -MP -MF $depbase.Tpo -c -o ../common/mpi_config.o ../common/mpi_config.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo ../common/matrix.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT ../common/matrix.o -MD -MP -MF $depbase.Tpo -c -o ../common/matrix.o ../common/matrix.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo ../common/vectors.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT ../common/vectors.o -MD -MP -MF $depbase.Tpo -c -o ../common/vectors.o ../common/vectors.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+../common/vectors.cc: In member function ‘void Spectrum::GeoVector::ChangeToBasis(const Spectrum::GeoVector*)’:
+../common/vectors.cc:64:15: warning: writing 24 bytes into a region of size 8 [-Wstringop-overflow=]
+   64 |    std::memcpy(data, vect_dif.data, 3 * SZDBL);
+      |    ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from ../common/multi_index.hh:12,
+                 from ../common/vectors.hh:12,
+                 from ../common/vectors.cc:9:
+../common/simple_array.hh:30:20: note: destination object ‘Spectrum::SimpleArrayBase<double, 3, true>::<unnamed union>::<unnamed struct>::x’ of size 8
+   30 |          data_type x, y, z;
+      |                    ^
+../common/vectors.cc: In member function ‘void Spectrum::GeoVector::ChangeToBasis2(const Spectrum::GeoVector*)’:
+../common/vectors.cc:78:15: warning: writing 24 bytes into a region of size 8 [-Wstringop-overflow=]
+   78 |    std::memcpy(data, vect_dif.data, 3 * SZDBL);
+      |    ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from ../common/multi_index.hh:12,
+                 from ../common/vectors.hh:12,
+                 from ../common/vectors.cc:9:
+../common/simple_array.hh:30:20: note: destination object ‘Spectrum::SimpleArrayBase<double, 3, true>::<unnamed union>::<unnamed struct>::x’ of size 8
+   30 |          data_type x, y, z;
+      |                    ^
+../common/vectors.cc: In member function ‘void Spectrum::GeoVector::ChangeFromBasis(const Spectrum::GeoVector*)’:
+../common/vectors.cc:92:15: warning: writing 24 bytes into a region of size 8 [-Wstringop-overflow=]
+   92 |    std::memcpy(data, vect_std.data, 3 * SZDBL);
+      |    ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from ../common/multi_index.hh:12,
+                 from ../common/vectors.hh:12,
+                 from ../common/vectors.cc:9:
+../common/simple_array.hh:30:20: note: destination object ‘Spectrum::SimpleArrayBase<double, 3, true>::<unnamed union>::<unnamed struct>::x’ of size 8
+   30 |          data_type x, y, z;
+      |                    ^
+depbase=`echo ../common/params.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT ../common/params.o -MD -MP -MF $depbase.Tpo -c -o ../common/params.o ../common/params.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo ../common/physics.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT ../common/physics.o -MD -MP -MF $depbase.Tpo -c -o ../common/physics.o ../common/physics.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo ../common/data_container.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT ../common/data_container.o -MD -MP -MF $depbase.Tpo -c -o ../common/data_container.o ../common/data_container.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+g++ -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -L/usr/mpi/gcc/openmpi-4.1.7rc1/lib64 -Wl,-rpath -Wl,/usr/mpi/gcc/openmpi-4.1.7rc1/lib64 -Wl,--enable-new-dtags -lmpi   -o main_test_perp_diff main_test_perp_diff.o ../src/simulation.o ../src/distribution_other.o ../src/distribution_templated.o ../src/distribution_base.o ../src/trajectory_guiding_diff.o ../src/trajectory_guiding.o ../src/trajectory_base.o ../src/background_uniform.o ../src/background_base.o ../src/background_base_visual.o ../src/boundary_time.o ../src/boundary_space.o ../src/boundary_base.o ../src/initial_time.o ../src/initial_space.o ../src/initial_momentum.o ../src/initial_base.o ../src/diffusion_other.o ../src/diffusion_base.o ../src/source_base.o ../common/mpi_config.o ../common/matrix.o ../common/vectors.o ../common/params.o ../common/physics.o ../common/data_container.o -L/usr/mpi/gcc/openmpi-4.1.7rc1/lib64 -Wl,-rpath -Wl,/usr/mpi/gcc/openmpi-4.1.7rc1/lib64 -Wl,--enable-new-dtags -lmpi  -lgsl -lgslcblas -lm  
+
+COMPILATION
+========================================
+completed
+========================================
+
+[32m../src/simulation.cc:97: info message: Particle specie added
+[0m[32m../src/simulation.cc:127: info message: Background object added
+[0m[32m../src/simulation.cc:152: info message: Initial condition added
+[0m[32m../src/simulation.cc:152: info message: Initial condition added
+[0m[32m../src/simulation.cc:152: info message: Initial condition added
+[0m[32m../src/simulation.cc:164: info message: Diffusion model added
+[0m[32m../src/simulation.cc:140: info message: Boundary condition added
+[0m[32m../src/simulation.cc:140: info message: Boundary condition added
+[0m[32m../src/simulation.cc:113: info message: Distribution object added
+[0m[32m../src/simulation.cc:113: info message: Distribution object added
+[0m========== MPI Communicators Info ==========
+Number of nodes: 1
+Size of global communicator: 128
+Size of boss communicator: 2
+Size of worker communicator: 128
+Total number of workers: 127
+Trajectories left: 100000
+
+Trajectories completed:                    1 %
+Est. time to finish:                      99 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 200 trajectories.
+    Slowest process has tallied 100 trajectories.
+
+Trajectories completed:                    2 %
+Est. time to finish:                      49 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 200 trajectories.
+    Slowest process has tallied 100 trajectories.
+
+Trajectories completed:                    3 %
+Est. time to finish:                      32 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 200 trajectories.
+    Slowest process has tallied 100 trajectories.
+
+Trajectories completed:                    4 %
+Est. time to finish:                      24 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 200 trajectories.
+    Slowest process has tallied 100 trajectories.
+
+Trajectories completed:                    5 %
+Est. time to finish:                      19 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 200 trajectories.
+    Slowest process has tallied 100 trajectories.
+
+Trajectories completed:                    6 %
+Est. time to finish:                      15 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 200 trajectories.
+    Slowest process has tallied 100 trajectories.
+
+Trajectories completed:                    7 %
+Est. time to finish:                      13 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 200 trajectories.
+    Slowest process has tallied 100 trajectories.
+
+Trajectories completed:                    8 %
+Est. time to finish:                      11 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 200 trajectories.
+    Slowest process has tallied 100 trajectories.
+
+Trajectories completed:                    9 %
+Est. time to finish:                      10 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 200 trajectories.
+    Slowest process has tallied 100 trajectories.
+
+Trajectories completed:                   10 %
+Est. time to finish:                       9 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 200 trajectories.
+    Slowest process has tallied 100 trajectories.
+
+Trajectories completed:                   11 %
+Est. time to finish:                       8 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 200 trajectories.
+    Slowest process has tallied 100 trajectories.
+
+Trajectories completed:                   12 %
+Est. time to finish:                       7 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 200 trajectories.
+    Slowest process has tallied 100 trajectories.
+
+Trajectories completed:                   13 %
+Est. time to finish:                       6 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 300 trajectories.
+    Slowest process has tallied 200 trajectories.
+
+Trajectories completed:                   14 %
+Est. time to finish:                       6 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 300 trajectories.
+    Slowest process has tallied 200 trajectories.
+
+Trajectories completed:                   15 %
+Est. time to finish:                       5 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 300 trajectories.
+    Slowest process has tallied 200 trajectories.
+
+Trajectories completed:                   16 %
+Est. time to finish:                       5 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 300 trajectories.
+    Slowest process has tallied 200 trajectories.
+
+Trajectories completed:                   17 %
+Est. time to finish:                       4 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 300 trajectories.
+    Slowest process has tallied 200 trajectories.
+
+Trajectories completed:                   18 %
+Est. time to finish:                       4 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 300 trajectories.
+    Slowest process has tallied 200 trajectories.
+
+Trajectories completed:                   19 %
+Est. time to finish:                       4 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 300 trajectories.
+    Slowest process has tallied 200 trajectories.
+
+Trajectories completed:                   20 %
+Est. time to finish:                       4 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 300 trajectories.
+    Slowest process has tallied 200 trajectories.
+
+Trajectories completed:                   21 %
+Est. time to finish:                       3 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 300 trajectories.
+    Slowest process has tallied 200 trajectories.
+
+Trajectories completed:                   22 %
+Est. time to finish:                       3 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 300 trajectories.
+    Slowest process has tallied 200 trajectories.
+
+Trajectories completed:                   23 %
+Est. time to finish:                       3 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 300 trajectories.
+    Slowest process has tallied 200 trajectories.
+
+Trajectories completed:                   24 %
+Est. time to finish:                       3 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 300 trajectories.
+    Slowest process has tallied 200 trajectories.
+
+Trajectories completed:                   25 %
+Est. time to finish:                       3 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 300 trajectories.
+    Slowest process has tallied 200 trajectories.
+
+Trajectories completed:                   26 %
+Est. time to finish:                       2 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 400 trajectories.
+    Slowest process has tallied 300 trajectories.
+
+Trajectories completed:                   27 %
+Est. time to finish:                       2 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 400 trajectories.
+    Slowest process has tallied 300 trajectories.
+
+Trajectories completed:                   28 %
+Est. time to finish:                       2 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 400 trajectories.
+    Slowest process has tallied 300 trajectories.
+
+Trajectories completed:                   29 %
+Est. time to finish:                       2 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 400 trajectories.
+    Slowest process has tallied 300 trajectories.
+
+Trajectories completed:                   30 %
+Est. time to finish:                       2 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 400 trajectories.
+    Slowest process has tallied 300 trajectories.
+
+Trajectories completed:                   31 %
+Est. time to finish:                       2 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 400 trajectories.
+    Slowest process has tallied 300 trajectories.
+
+Trajectories completed:                   32 %
+Est. time to finish:                       2 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 400 trajectories.
+    Slowest process has tallied 300 trajectories.
+
+Trajectories completed:                   33 %
+Est. time to finish:                       2 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 400 trajectories.
+    Slowest process has tallied 300 trajectories.
+
+Trajectories completed:                   34 %
+Est. time to finish:                       1 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 400 trajectories.
+    Slowest process has tallied 300 trajectories.
+
+Trajectories completed:                   35 %
+Est. time to finish:                       1 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 400 trajectories.
+    Slowest process has tallied 300 trajectories.
+
+Trajectories completed:                   36 %
+Est. time to finish:                       1 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 400 trajectories.
+    Slowest process has tallied 300 trajectories.
+
+Trajectories completed:                   37 %
+Est. time to finish:                       1 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 400 trajectories.
+    Slowest process has tallied 300 trajectories.
+
+Trajectories completed:                   38 %
+Est. time to finish:                       1 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 400 trajectories.
+    Slowest process has tallied 300 trajectories.
+
+Trajectories completed:                   39 %
+Est. time to finish:                       1 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 500 trajectories.
+    Slowest process has tallied 400 trajectories.
+
+Trajectories completed:                   40 %
+Est. time to finish:                       1 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 500 trajectories.
+    Slowest process has tallied 400 trajectories.
+
+Trajectories completed:                   41 %
+Est. time to finish:                       1 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 500 trajectories.
+    Slowest process has tallied 400 trajectories.
+
+Trajectories completed:                   42 %
+Est. time to finish:                       1 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 500 trajectories.
+    Slowest process has tallied 400 trajectories.
+
+Trajectories completed:                   43 %
+Est. time to finish:                       1 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 500 trajectories.
+    Slowest process has tallied 400 trajectories.
+
+Trajectories completed:                   44 %
+Est. time to finish:                       1 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 500 trajectories.
+    Slowest process has tallied 400 trajectories.
+
+Trajectories completed:                   45 %
+Est. time to finish:                       1 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 500 trajectories.
+    Slowest process has tallied 400 trajectories.
+
+Trajectories completed:                   46 %
+Est. time to finish:                       1 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 500 trajectories.
+    Slowest process has tallied 400 trajectories.
+
+Trajectories completed:                   47 %
+Est. time to finish:                       1 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 500 trajectories.
+    Slowest process has tallied 400 trajectories.
+
+Trajectories completed:                   48 %
+Est. time to finish:                       1 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 500 trajectories.
+    Slowest process has tallied 400 trajectories.
+
+Trajectories completed:                   49 %
+Est. time to finish:                       1 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 500 trajectories.
+    Slowest process has tallied 400 trajectories.
+
+Trajectories completed:                   50 %
+Est. time to finish:                       1 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 500 trajectories.
+    Slowest process has tallied 400 trajectories.
+
+Trajectories completed:                   51 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 600 trajectories.
+    Slowest process has tallied 500 trajectories.
+
+Trajectories completed:                   52 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 600 trajectories.
+    Slowest process has tallied 500 trajectories.
+
+Trajectories completed:                   53 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 600 trajectories.
+    Slowest process has tallied 500 trajectories.
+
+Trajectories completed:                   54 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 600 trajectories.
+    Slowest process has tallied 500 trajectories.
+
+Trajectories completed:                   55 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 600 trajectories.
+    Slowest process has tallied 500 trajectories.
+
+Trajectories completed:                   56 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 600 trajectories.
+    Slowest process has tallied 500 trajectories.
+
+Trajectories completed:                   57 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 600 trajectories.
+    Slowest process has tallied 500 trajectories.
+
+Trajectories completed:                   58 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 600 trajectories.
+    Slowest process has tallied 500 trajectories.
+
+Trajectories completed:                   59 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 600 trajectories.
+    Slowest process has tallied 500 trajectories.
+
+Trajectories completed:                   60 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 600 trajectories.
+    Slowest process has tallied 500 trajectories.
+
+Trajectories completed:                   61 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 600 trajectories.
+    Slowest process has tallied 500 trajectories.
+
+Trajectories completed:                   62 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 600 trajectories.
+    Slowest process has tallied 500 trajectories.
+
+Trajectories completed:                   63 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 600 trajectories.
+    Slowest process has tallied 500 trajectories.
+
+Trajectories completed:                   64 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 700 trajectories.
+    Slowest process has tallied 500 trajectories.
+
+Trajectories completed:                   65 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 700 trajectories.
+    Slowest process has tallied 600 trajectories.
+
+Trajectories completed:                   66 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 700 trajectories.
+    Slowest process has tallied 600 trajectories.
+
+Trajectories completed:                   67 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 700 trajectories.
+    Slowest process has tallied 600 trajectories.
+
+Trajectories completed:                   68 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 700 trajectories.
+    Slowest process has tallied 600 trajectories.
+
+Trajectories completed:                   69 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 700 trajectories.
+    Slowest process has tallied 600 trajectories.
+
+Trajectories completed:                   70 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 700 trajectories.
+    Slowest process has tallied 600 trajectories.
+
+Trajectories completed:                   71 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 700 trajectories.
+    Slowest process has tallied 600 trajectories.
+
+Trajectories completed:                   72 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 700 trajectories.
+    Slowest process has tallied 600 trajectories.
+
+Trajectories completed:                   73 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 700 trajectories.
+    Slowest process has tallied 600 trajectories.
+
+Trajectories completed:                   74 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 700 trajectories.
+    Slowest process has tallied 600 trajectories.
+
+Trajectories completed:                   75 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 700 trajectories.
+    Slowest process has tallied 600 trajectories.
+
+Trajectories completed:                   76 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 700 trajectories.
+    Slowest process has tallied 600 trajectories.
+
+Trajectories completed:                   77 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 800 trajectories.
+    Slowest process has tallied 600 trajectories.
+
+Trajectories completed:                   78 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 800 trajectories.
+    Slowest process has tallied 600 trajectories.
+
+Trajectories completed:                   79 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 800 trajectories.
+    Slowest process has tallied 600 trajectories.
+
+Trajectories completed:                   80 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 800 trajectories.
+    Slowest process has tallied 600 trajectories.
+
+Trajectories completed:                   81 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 800 trajectories.
+    Slowest process has tallied 600 trajectories.
+
+Trajectories completed:                   82 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 800 trajectories.
+    Slowest process has tallied 600 trajectories.
+
+Trajectories completed:                   83 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 800 trajectories.
+    Slowest process has tallied 600 trajectories.
+
+Trajectories completed:                   84 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    0 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 800 trajectories.
+    Slowest process has tallied 700 trajectories.
+
+Trajectories completed:                   85 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    50 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 800 trajectories.
+    Slowest process has tallied 700 trajectories.
+
+Trajectories completed:                   86 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    50 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 800 trajectories.
+    Slowest process has tallied 700 trajectories.
+
+Trajectories completed:                   87 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    50 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 800 trajectories.
+    Slowest process has tallied 700 trajectories.
+
+Trajectories completed:                   88 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    50 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 800 trajectories.
+    Slowest process has tallied 700 trajectories.
+
+Trajectories completed:                   89 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    50 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 800 trajectories.
+    Slowest process has tallied 700 trajectories.
+
+Trajectories completed:                   90 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    50 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 800 trajectories.
+    Slowest process has tallied 700 trajectories.
+
+Trajectories completed:                   91 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    50 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 800 trajectories.
+    Slowest process has tallied 700 trajectories.
+
+Trajectories completed:                   92 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    50 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 800 trajectories.
+    Slowest process has tallied 700 trajectories.
+
+Trajectories completed:                   93 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    50 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 800 trajectories.
+    Slowest process has tallied 700 trajectories.
+
+Trajectories completed:                   94 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    50 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 800 trajectories.
+    Slowest process has tallied 700 trajectories.
+
+Trajectories completed:                   95 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    50 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 800 trajectories.
+    Slowest process has tallied 700 trajectories.
+
+Trajectories completed:                   96 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    50 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 800 trajectories.
+    Slowest process has tallied 700 trajectories.
+
+Trajectories completed:                   97 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    50 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 800 trajectories.
+    Slowest process has tallied 700 trajectories.
+
+Trajectories completed:                   98 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    50 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 800 trajectories.
+    Slowest process has tallied 700 trajectories.
+
+Trajectories completed:                   99 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    50 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 800 trajectories.
+    Slowest process has tallied 700 trajectories.
+
+Trajectories completed:                  100 %
+Est. time to finish:                       0 seconds
+Time allocated for job:                  inf (No WM)
+SIMULATION EFFICIENCY: 
+    50 % of time was spent computing trajectories.
+LOAD BALANCING: 
+    Fastest process has tallied 800 trajectories.
+    Slowest process has tallied 700 trajectories.
+[32m../src/simulation.cc:798: info message: Simulation completed
+[0mShortest simulated trajectory time = 0.0115639 s
+Longest simulated trajectory time = 0.0115639 s
+Time per trajectory integration:
+	cpu 1 = 1.47 ms
+	cpu 2 = 1.5025 ms
+	cpu 3 = 1.4875 ms
+	cpu 4 = 1.49875 ms
+	cpu 5 = 1.495 ms
+	cpu 6 = 1.49375 ms
+	cpu 7 = 1.46875 ms
+	cpu 8 = 1.50625 ms
+	cpu 9 = 1.51625 ms
+	cpu 10 = 1.51625 ms
+	cpu 11 = 1.4875 ms
+	cpu 12 = 1.5175 ms
+	cpu 13 = 1.4775 ms
+	cpu 14 = 1.49 ms
+	cpu 15 = 1.51375 ms
+	cpu 16 = 1.46875 ms
+	cpu 17 = 1.48125 ms
+	cpu 18 = 1.54143 ms
+	cpu 19 = 1.49875 ms
+	cpu 20 = 1.47125 ms
+	cpu 21 = 1.48375 ms
+	cpu 22 = 1.46875 ms
+	cpu 23 = 1.475 ms
+	cpu 24 = 1.48875 ms
+	cpu 25 = 1.50125 ms
+	cpu 26 = 1.49125 ms
+	cpu 27 = 1.485 ms
+	cpu 28 = 1.505 ms
+	cpu 29 = 1.49375 ms
+	cpu 30 = 1.48125 ms
+	cpu 31 = 1.4925 ms
+	cpu 32 = 1.49125 ms
+	cpu 33 = 1.49 ms
+	cpu 34 = 1.4875 ms
+	cpu 35 = 1.54143 ms
+	cpu 36 = 1.47875 ms
+	cpu 37 = 1.49875 ms
+	cpu 38 = 1.47 ms
+	cpu 39 = 1.48 ms
+	cpu 40 = 1.48125 ms
+	cpu 41 = 1.50875 ms
+	cpu 42 = 1.5025 ms
+	cpu 43 = 1.49125 ms
+	cpu 44 = 1.48 ms
+	cpu 45 = 1.49875 ms
+	cpu 46 = 1.47875 ms
+	cpu 47 = 1.48 ms
+	cpu 48 = 1.48375 ms
+	cpu 49 = 1.485 ms
+	cpu 50 = 1.48625 ms
+	cpu 51 = 1.495 ms
+	cpu 52 = 1.4825 ms
+	cpu 53 = 1.48625 ms
+	cpu 54 = 1.4825 ms
+	cpu 55 = 1.4775 ms
+	cpu 56 = 1.485 ms
+	cpu 57 = 1.59429 ms
+	cpu 58 = 1.485 ms
+	cpu 59 = 1.48625 ms
+	cpu 60 = 1.48125 ms
+	cpu 61 = 1.48875 ms
+	cpu 62 = 1.46875 ms
+	cpu 63 = 1.49125 ms
+	cpu 64 = 1.4875 ms
+	cpu 65 = 1.495 ms
+	cpu 66 = 1.78143 ms
+	cpu 67 = 1.48875 ms
+	cpu 68 = 1.53714 ms
+	cpu 69 = 1.48375 ms
+	cpu 70 = 1.54286 ms
+	cpu 71 = 1.475 ms
+	cpu 72 = 1.48 ms
+	cpu 73 = 1.54286 ms
+	cpu 74 = 1.47625 ms
+	cpu 75 = 1.49875 ms
+	cpu 76 = 1.47 ms
+	cpu 77 = 1.48625 ms
+	cpu 78 = 1.5 ms
+	cpu 79 = 1.48625 ms
+	cpu 80 = 1.4775 ms
+	cpu 81 = 1.47625 ms
+	cpu 82 = 1.495 ms
+	cpu 83 = 1.495 ms
+	cpu 84 = 1.59571 ms
+	cpu 85 = 1.47625 ms
+	cpu 86 = 1.4675 ms
+	cpu 87 = 1.47375 ms
+	cpu 88 = 1.485 ms
+	cpu 89 = 1.51429 ms
+	cpu 90 = 1.5025 ms
+	cpu 91 = 1.5025 ms
+	cpu 92 = 1.48625 ms
+	cpu 93 = 1.49625 ms
+	cpu 94 = 1.48875 ms
+	cpu 95 = 1.4875 ms
+	cpu 96 = 1.55286 ms
+	cpu 97 = 1.475 ms
+	cpu 98 = 1.4775 ms
+	cpu 99 = 1.49625 ms
+	cpu 100 = 1.47125 ms
+	cpu 101 = 1.47125 ms
+	cpu 102 = 1.4775 ms
+	cpu 103 = 1.48875 ms
+	cpu 104 = 1.4675 ms
+	cpu 105 = 1.4775 ms
+	cpu 106 = 1.48 ms
+	cpu 107 = 1.47 ms
+	cpu 108 = 1.48 ms
+	cpu 109 = 1.4875 ms
+	cpu 110 = 1.51 ms
+	cpu 111 = 1.56714 ms
+	cpu 112 = 1.48375 ms
+	cpu 113 = 1.475 ms
+	cpu 114 = 1.47375 ms
+	cpu 115 = 1.465 ms
+	cpu 116 = 1.475 ms
+	cpu 117 = 1.52 ms
+	cpu 118 = 1.4675 ms
+	cpu 119 = 1.52 ms
+	cpu 120 = 1.51857 ms
+	cpu 121 = 1.56429 ms
+	cpu 122 = 1.48875 ms
+	cpu 123 = 1.47625 ms
+	cpu 124 = 1.49 ms
+	cpu 125 = 1.47875 ms
+	cpu 126 = 1.475 ms
+	cpu 127 = 1.48625 ms
+Total time of this simulation:                    1 seconds.
+
+EXECUTION
+========================================
+completed
+========================================
+
+/data001/cosmicrays_vf/Sammy/SPECTRUM/benchmarks
+
+PLOTTING
+========================================
+completed
+========================================
+

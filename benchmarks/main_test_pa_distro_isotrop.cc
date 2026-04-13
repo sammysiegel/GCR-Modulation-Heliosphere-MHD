@@ -28,7 +28,8 @@ int main(int argc, char** argv)
 // Particle type
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 
-   Specie<default_specie> specie;
+   int specie = SPECIES_PROTON_BEAM;
+   simulation->SetSpecie(specie);
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // Background
@@ -47,7 +48,7 @@ int main(int argc, char** argv)
    container.Insert(gv_zeros);
 
 // Magnetic field
-   double Bmag = 1.0 / Particle::unit_magnetic;
+   double Bmag = 1.0 / unit_magnetic_fluid;
    GeoVector B0(0.0, 0.0, Bmag);
    container.Insert(B0);
 
@@ -86,7 +87,7 @@ int main(int argc, char** argv)
    container.Clear();
 
 // Initial momentum
-   double momentum = Particle::Mom<specie>(1.0 * SPC_CONST_CGSM_MEGA_ELECTRON_VOLT / Particle::unit_energy);
+   double momentum = Mom(1.0 * SPC_CONST_CGSM_MEGA_ELECTRON_VOLT / unit_energy_particle, specie);
    container.Insert(momentum);
 
    double theta = DegToRad(45.0);
@@ -101,7 +102,7 @@ int main(int argc, char** argv)
    container.Clear();
 
 // Scattering frequency
-   double D0 = 0.01 * Particle::CyclotronFrequency<specie>(Particle::Vel<specie>(momentum), Bmag);
+   double D0 = 0.01 * CyclotronFrequency(Vel(momentum),Bmag,specie);
    container.Insert(D0);
 
 // Pass ownership of "diffusion" to simulation
@@ -234,7 +235,7 @@ int main(int argc, char** argv)
    container.Insert(unit_distro);
 
 // Physical units of the bin variable
-   GeoVector unit_val = {Particle::unit_momentum, 1.0, 1.0};
+   GeoVector unit_val = {unit_momentum_particle, 1.0, 1.0};
    container.Insert(unit_val);
 
 // Don't keep records
@@ -466,7 +467,7 @@ int main(int argc, char** argv)
       std::cout << "PITCH ANGLE DISTRIBUTION ISOTROPIZATION" << std::endl;
       std::cout << "++++++++++++++++++++" << std::endl;
       std::cout << "Trajectory type: " << simulation->GetTrajectoryName() << std::endl;
-      std::cout << "D0 = " << D0 / Particle::unit_time << std::endl;
+      std::cout << "D0 = " << D0 / unit_time_fluid << std::endl;
       std::cout << "distros outputed at times:" << std::endl;
       std::cout << "\t initial   = " << 0.0 << " s" << std::endl;
       std::cout << "\t timemark1 = " << timemark1 << " s" << std::endl;

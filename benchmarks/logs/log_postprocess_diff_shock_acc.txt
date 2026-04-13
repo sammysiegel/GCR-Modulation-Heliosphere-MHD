@@ -1,0 +1,25 @@
+DIFFUSIVE SHOCK ACCELERATION POST-PROCESS --- Mon Nov 17 12:45:58 CST 2025
+------------------------------------------------------------
+depbase=`echo main_postprocess_diff_shock_acc.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -DHAVE_CONFIG_H -I. -I..    -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -MT main_postprocess_diff_shock_acc.o -MD -MP -MF $depbase.Tpo -c -o main_postprocess_diff_shock_acc.o main_postprocess_diff_shock_acc.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+g++ -I/usr/mpi/gcc/openmpi-4.1.7rc1/include -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi -I/usr/mpi/gcc/openmpi-4.1.7rc1/include/openmpi/opal/mca/hwloc/hwloc201/hwloc/include  -Ofast -std=c++20 -DOMPI_SKIP_MPICXX -L/usr/mpi/gcc/openmpi-4.1.7rc1/lib64 -Wl,-rpath -Wl,/usr/mpi/gcc/openmpi-4.1.7rc1/lib64 -Wl,--enable-new-dtags -lmpi   -o main_postprocess_diff_shock_acc main_postprocess_diff_shock_acc.o ../common/matrix.o ../common/vectors.o ../common/params.o ../common/physics.o ../common/data_container.o -L/usr/mpi/gcc/openmpi-4.1.7rc1/lib64 -Wl,-rpath -Wl,/usr/mpi/gcc/openmpi-4.1.7rc1/lib64 -Wl,--enable-new-dtags -lmpi  -lgsl -lgslcblas -lm  
+
+COMPILATION
+========================================
+completed
+========================================
+
+
+EXECUTION
+========================================
+completed
+========================================
+
+/data001/cosmicrays_vf/Sammy/SPECTRUM/benchmarks
+
+PLOTTING
+========================================
+completed
+========================================
+

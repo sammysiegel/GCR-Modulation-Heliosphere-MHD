@@ -9,16 +9,13 @@ This file is part of the SPECTRUM suite of scientific numerical simulation codes
 #ifndef SPECTRUM_GPU_CONFIG_HH
 #define SPECTRUM_GPU_CONFIG_HH
 
-#include <iostream>
-
 #ifdef __CUDACC__
 
 #include <cuda_runtime.h>
+#include <iostream>
 
 //! Every function marked so is compiled for both host and device
 #define SPECTRUM_DEVICE_FUNC __host__ __device__
-
-//! CUDA requires "__device__" for its "constexpr" vars
 #define SPECTRUM_CONSTEXPR __device__ constexpr
 
 /*!
@@ -27,7 +24,7 @@ This file is part of the SPECTRUM suite of scientific numerical simulation codes
 \date 10/28/2025
 \param[in] device The device to print information about
 */
-inline void PrintDeviceInfo(int device = 0)
+__host__ inline void PrintDeviceInfo(int device = 0)
 {
    cudaDeviceProp prop;
    cudaGetDeviceProperties(&prop, device);
@@ -48,8 +45,6 @@ inline void PrintDeviceInfo(int device = 0)
 
 //! Define as empty when compiling with a non-GPU compiler
 #define SPECTRUM_DEVICE_FUNC
-
-//! Defaults to plain "constexpr" when compiling with a non-GPU compiler
 #define SPECTRUM_CONSTEXPR constexpr
 
 /*!
@@ -60,7 +55,6 @@ inline void PrintDeviceInfo(int device = 0)
 */
 inline void PrintDeviceInfo(int device = 0)
 {
-   std::cerr << "CUDA was disabled during build\n";
 };
 
 #endif

@@ -19,20 +19,20 @@ int main(void)
    MultiIndex Nblocks (Nb, Nb, Nb); // Number of blocks in each dimension
 
 // Domain limits
-   double one_au = SPC_CONST_CGSM_ASTRONOMICAL_UNIT / Particle::unit_length;
-   double corner = 100.0 * one_au;
+   double corner = 100.0 * GSL_CONST_CGSM_ASTRONOMICAL_UNIT / unit_length_fluid;
    GeoVector dom_min (-corner, -corner, -corner); // Minimum domain values
    GeoVector dom_max ( corner,  corner,  corner); // Maximum domain values
 
 // Variables to output
-   int Nvar = 6;
+   int Nvar = 9;
    RAISE_BITS(spdata._mask, BACKGROUND_U);
    RAISE_BITS(spdata._mask, BACKGROUND_B);
+   RAISE_BITS(spdata._mask, BACKGROUND_E);
 
    DataContainer container;
    container.Clear();
 
-// ========== PARKER SPIRAL SOLAR WIND MODEL ==========
+// ========== PARKER SPIRAL ==========
 
 // Initial time
    double t0 = 0.0;
@@ -42,24 +42,25 @@ int main(void)
    container.Insert(gv_zeros);
 
 // Velocity
-   double umag = 4.0e7 / Particle::unit_velocity;
+   double umag = 4.0e7 / unit_velocity_fluid;
    GeoVector u0(umag, 0.0, 0.0);
    container.Insert(u0);
 
 // Magnetic field
-   double RS = 6.957e10 / Particle::unit_length;
+   double RS = 6.957e10 / unit_length_fluid;
    double r_ref = 3.0 * RS;
-   double BmagE = 5.0e-5 / Particle::unit_magnetic;
-   double Bmag_ref = BmagE * Sqr(one_au / r_ref);
+   double BmagE = 5.0e-5 / unit_magnetic_fluid;
+   double Bmag_ref = BmagE * Sqr((GSL_CONST_CGSM_ASTRONOMICAL_UNIT / unit_length_fluid) / r_ref);
    GeoVector B0(Bmag_ref, 0.0, 0.0);
    container.Insert(B0);
 
 // Effective "mesh" resolution
-   double dmax = one_au;
+   double dmax_fraction = 0.1;
+   double dmax = dmax_fraction * GSL_CONST_CGSM_ASTRONOMICAL_UNIT / unit_length_fluid;
    container.Insert(dmax);
 
 // solar rotation vector
-   double w0 = M_2PI / (25.0 * 24.0 * 3600.0) * Particle::unit_time;
+   double w0 = M_2PI / (25.0 * 24.0 * 3600.0) / unit_frequency_fluid;
    GeoVector Omega(0.0, 0.0, w0);
    container.Insert(Omega);
 
@@ -67,16 +68,12 @@ int main(void)
    container.Insert(r_ref);
 
 // dmax fraction for distances closer to the Sun
-   double dmax_fraction = 0.1;
    container.Insert(dmax_fraction);
 
    background.SetupObject(container);
 
 // Generate header file
    int var;
-   double length_ratio = Particle::unit_length / Fluid::unit_length;
-   double velocity_ratio = Particle::unit_velocity / Fluid::unit_velocity;
-   double magnetic_ratio = Particle::unit_magnetic / Fluid::unit_magnetic;
 
    std::cerr << "Outputting header file. Progress:     ";
 
@@ -88,13 +85,13 @@ int main(void)
                << std::setw(20) << Nblocks[1]
                << std::setw(20) << Nblocks[2]
                << std::endl;
-   header_file << std::setw(20) << dom_min[0] * length_ratio
-               << std::setw(20) << dom_min[1] * length_ratio
-               << std::setw(20) << dom_min[2] * length_ratio
+   header_file << std::setw(20) << dom_min[0]
+               << std::setw(20) << dom_min[1]
+               << std::setw(20) << dom_min[2]
                << std::endl;
-   header_file << std::setw(20) << dom_max[0] * length_ratio
-               << std::setw(20) << dom_max[1] * length_ratio
-               << std::setw(20) << dom_max[2] * length_ratio
+   header_file << std::setw(20) << dom_max[0]
+               << std::setw(20) << dom_max[1]
+               << std::setw(20) << dom_max[2]
                << std::endl;
    header_file << std::setw(20) << Nvar
                << std::endl;
@@ -107,7 +104,7 @@ int main(void)
    int ib,jb,kb; // block indices
    int iz,jz,kz; // zone indices
    GeoVector block_length = (dom_max - dom_min) / Nblocks; // length of each block
-   GeoVector zone_length = block_length / block_size; // length of each zone
+   GeoVector zone_length = (block_length) / block_size; // length of each zone
    GeoVector delta = 0.5 * zone_length; // half-length of each zone
    double t = 0.0; // time at which to output data
    GeoVector center_min, pos, mom; // position vectors
@@ -135,10 +132,9 @@ int main(void)
                      zone_idx.i = iz;
                      pos = center_min + zone_idx * zone_length;
                      background.GetFields(t, pos, mom, spdata);
-                     spdata.Uvec *= velocity_ratio;
-                     spdata.Bvec *= magnetic_ratio;
                      for(var = 0; var < 3; var++) data_file.write((char*)(&spdata.Uvec[var]), sizeof(double));
                      for(var = 0; var < 3; var++) data_file.write((char*)(&spdata.Bvec[var]), sizeof(double));
+                     for(var = 0; var < 3; var++) data_file.write((char*)(&spdata.Evec[var]), sizeof(double));
                   };
                };
             };

@@ -11,7 +11,7 @@ This file is part of the SPECTRUM suite of scientific numerical simulation codes
 
 #include <fstream>
 #include <iomanip>
-
+#include <iostream>
 #include "common/definitions.hh"
 
 namespace Spectrum {
@@ -78,7 +78,7 @@ inline void PrintMessage(const char* filename, int line, const std::string& mess
 */
 inline void PrintPassFail(const std::string& message, double res1, double res2)
 {
-   bool cmp = fabs(res2 - res1) / (fabs(res2) + fabs(res1)) < sp_miniscule;
+   bool cmp = fabs(res2 - res1) / (fabs(res2) + fabs(res1)) < sp_tiny;
    std::cerr << message + ": " << (cmp ? inf_color : err_color) << (cmp ? "passed" : "failed");
    std::cerr << std_color;
    std::cerr << " (" << res1 << " / " << res2 << ")\n";

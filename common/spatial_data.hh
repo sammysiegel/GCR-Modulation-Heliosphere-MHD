@@ -11,6 +11,7 @@ This file is part of the SPECTRUM suite of scientific numerical simulation codes
 #define SPECTRUM_SPATIAL_DATA_HH
 
 #include <cstdint>
+#include "vectors.hh"
 #include "matrix.hh"
 
 namespace Spectrum {
@@ -128,7 +129,7 @@ struct SpatialData {
 
 //! Region
 // TODO: provide for more regions (perhaps use a SimpleArray)
-   GeoVector region;
+   SimpleArray<double, 4> region;
 
 //! Spatial maximum distance per time step, grid dependent
    double dmax;

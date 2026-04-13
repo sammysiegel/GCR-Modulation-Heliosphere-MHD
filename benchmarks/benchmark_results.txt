@@ -1,0 +1,18 @@
+BENCHMARK RESULTS --- Mon Nov 17 12:44:49 CST 2025
+------------------------------------------------------------
+
+DIFFUSIVE SHOCK ACCELERATION
+++++++++++++++++++++
+Trajectory type: TrajectoryParkerSource
+z_diff = 0.167115 au
+z_spectrum = 0.1 au
+w_shock = 0.01 au
+t_acc = 2.89352 days
+t_final = 100 days
+min dt_adv = 0.00259713 days
+max dt_dif = 0.00239357 days
+++++++++++++++++++++
+Distribution files outputed to main_test_diff_shock_acc_TrajectoryParkerSource_
+
+Post-processed distribution files outputed to main_test_diff_shock_acc_TrajectoryParkerSource_spectrum_pp.dat
+

@@ -28,7 +28,8 @@ int main(int argc, char** argv)
 // Particle type
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 
-   Specie<default_specie> specie;
+   int specie = SPECIES_PROTON_BEAM;
+   simulation->SetSpecie(specie);
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // Background
@@ -47,7 +48,7 @@ int main(int argc, char** argv)
    container.Insert(gv_zeros);
 
 // Magnetic field
-   double Bmag = 1.0 / Particle::unit_magnetic;
+   double Bmag = 1.0 / unit_magnetic_fluid;
    GeoVector B0(0.0, 0.0, Bmag);
    container.Insert(B0);
 
@@ -86,7 +87,7 @@ int main(int argc, char** argv)
    container.Clear();
 
 // Initial momentum
-   double momentum = Particle::Mom<specie>(1.0 * SPC_CONST_CGSM_MEGA_ELECTRON_VOLT / Particle::unit_energy);
+   double momentum = Mom(1.0 * SPC_CONST_CGSM_MEGA_ELECTRON_VOLT / unit_energy_particle, specie);
    container.Insert(momentum);
 
    double theta = DegToRad(90.0);
@@ -101,7 +102,7 @@ int main(int argc, char** argv)
    container.Clear();
 
 // Scattering frequency
-   double D0 = 0.01 * Particle::CyclotronFrequency<specie>(Particle::Vel<specie>(momentum), Bmag);
+   double D0 = 0.01 * CyclotronFrequency(Vel(momentum),Bmag,specie);
    container.Insert(D0);
 
 // Pass ownership of "diffusion" to simulation
@@ -178,11 +179,11 @@ int main(int argc, char** argv)
    container.Insert(bin_outside1);
 
 // Physical units of the distro variable
-   GeoVector unit_distro1 = Particle::unit_length * gv_ones;
+   GeoVector unit_distro1 = unit_length_fluid * gv_ones;
    container.Insert(unit_distro1);
 
 // Physical units of the bin variable
-   GeoVector unit_val1 = {Particle::unit_time, 1.0, 1.0};
+   GeoVector unit_val1 = {unit_time_fluid, 1.0, 1.0};
    container.Insert(unit_val1);
 
 // Don't keep records
@@ -214,7 +215,7 @@ int main(int argc, char** argv)
    container.Insert(bin_outside1);
 
 // Physical units of the distro variable
-   GeoMatrix unit_distro2 = Sqr(Particle::unit_length) * gm_ones;
+   GeoMatrix unit_distro2 = Sqr(unit_length_fluid) * gm_ones;
    container.Insert(unit_distro2);
 
 // Physical units of the bin variable
@@ -248,8 +249,8 @@ int main(int argc, char** argv)
       std::cout << "PITCH ANGLE SCATTERING" << std::endl;
       std::cout << "++++++++++++++++++++" << std::endl;
       std::cout << "Trajectory type: " << simulation->GetTrajectoryName() << std::endl;
-      std::cout << "D0      = " << D0 / Particle::unit_time << std::endl;
-      std::cout << "kappa_z = " << Sqr(Particle::Vel<specie>(momentum)) / (6.0 * D0) * Sqr(Particle::unit_length) / Particle::unit_time << std::endl;
+      std::cout << "D0      = " << D0 / unit_time_fluid << std::endl;
+      std::cout << "kappa_z = " << Sqr(Vel(momentum)) / (6.0 * D0) * Sqr(unit_length_fluid) / unit_time_fluid << std::endl;
       std::cout << "++++++++++++++++++++" << std::endl;
       std::cout << "Distribution files outputed to " << simulation_files_prefix << std::endl;
       std::cout << std::endl;

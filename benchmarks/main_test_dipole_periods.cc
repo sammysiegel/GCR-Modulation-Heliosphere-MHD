@@ -1,6 +1,3 @@
-#include <iostream>
-#include <iomanip>
-
 #include "src/background_dipole.hh"
 #include "src/boundary_time.hh"
 #include "src/boundary_space.hh"
@@ -9,6 +6,8 @@
 #include "src/initial_space.hh"
 #include "src/initial_momentum.hh"
 #include "src/traj_config.hh"
+#include <iostream>
+#include <iomanip>
 
 using namespace Spectrum;
 
@@ -34,7 +33,8 @@ int main(int argc, char** argv)
 // Particle type
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 
-   Specie<default_specie> specie;
+   int specie = SPECIES_PROTON_BEAM;
+   trajectory->SetSpecie(specie);
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // Background
@@ -53,12 +53,12 @@ int main(int argc, char** argv)
    container.Insert(gv_zeros);
 
 // Magnetic field
-   double Bmag = 0.311 / Particle::unit_magnetic;
+   double Bmag = 0.311 / unit_magnetic_fluid;
    GeoVector B0(0.0, 0.0, Bmag);
    container.Insert(B0);
 
 // Effective "mesh" resolution
-   double RE = 6.37e8 / Particle::unit_length;
+   double RE = 6.37e8 / unit_length_fluid;
    double dmax_fraction = 0.1;
    double dmax = dmax_fraction * RE;
    container.Insert(dmax);
@@ -89,7 +89,7 @@ int main(int argc, char** argv)
 
    container.Clear();
 
-   double L = 4.0;
+   double L = 3.0;
    GeoVector start_pos(L*RE, 0.0, 0.0);
    container.Insert(start_pos);
 
@@ -103,8 +103,7 @@ int main(int argc, char** argv)
 
 // Initial momentum
    double MeV_kinetic_energy = 1.0;
-   double kinetic_energy = MeV_kinetic_energy * SPC_CONST_CGSM_MEGA_ELECTRON_VOLT / Particle::unit_energy;
-   container.Insert(Particle::Mom<specie>(kinetic_energy));
+   container.Insert(Mom(MeV_kinetic_energy * SPC_CONST_CGSM_MEGA_ELECTRON_VOLT / unit_energy_particle, specie));
 
    double theta_eq = DegToRad(30.0);
    container.Insert(theta_eq);
@@ -126,8 +125,8 @@ int main(int argc, char** argv)
    container.Insert(actions);
    
 // Duration of the trajectory
-   double drift_period = 3600.0 * 1.05 / MeV_kinetic_energy / L / (1.0 + 0.43 * sin(theta_eq)) / Particle::unit_time;
-   double bounce_period = 2.41 * L * (1.0 - 0.43 * sin(theta_eq)) / sqrt(MeV_kinetic_energy) / Particle::unit_time;
+   double drift_period = 3600.0 * 1.05 / MeV_kinetic_energy / L / (1.0 + 0.43 * sin(theta_eq)) / unit_time_fluid;
+   double bounce_period = 2.41 * L * (1.0 - 0.43 * sin(theta_eq)) / sqrt(MeV_kinetic_energy) / unit_time_fluid;
    double maxtime = 10.0 * drift_period;
    container.Insert(maxtime);
 
@@ -224,17 +223,17 @@ int main(int argc, char** argv)
    std::cout << "DIPOLE FIELD DRIFT PERIODS" << std::endl;
    std::cout << "++++++++++++++++++++" << std::endl;
    std::cout << "Trajectory type: " << trajectory->GetName() << std::endl;
-   std::cout << "Time elapsed (simulated)     = " << trajectory->ElapsedTime() * Particle::unit_time << " s" << std::endl;
-   std::cout << "drift period (theory)        = " << drift_period * Particle::unit_time << " s" << std::endl;
-   std::cout << "drift period (simulation)    = " << 2.0 * trajectory->ElapsedTime() * Particle::unit_time / trajectory->Crossings(1,1) << " s" << std::endl;
-   std::cout << "bounce period (theory)       = " << bounce_period * Particle::unit_time << " s" << std::endl;
-   std::cout << "bounce period (simulation 1) = " << 2.0 * trajectory->ElapsedTime() * Particle::unit_time / trajectory->Crossings(1,2) << " s" << std::endl;
-   std::cout << "bounce period (simulation 2) = " << 2.0 * trajectory->ElapsedTime() * Particle::unit_time / trajectory->Mirrorings() << " s" << std::endl;
+   std::cout << "Time elapsed (simulated)     = " << trajectory->ElapsedTime() * unit_time_fluid << " s" << std::endl;
+   std::cout << "drift period (theory)        = " << drift_period * unit_time_fluid << " s" << std::endl;
+   std::cout << "drift period (simulation)    = " << 2.0 * trajectory->ElapsedTime() * unit_time_fluid / trajectory->Crossings(1,1) << " s" << std::endl;
+   std::cout << "bounce period (theory)       = " << bounce_period * unit_time_fluid << " s" << std::endl;
+   std::cout << "bounce period (simulation 1) = " << 2.0 * trajectory->ElapsedTime() * unit_time_fluid / trajectory->Crossings(1,2) << " s" << std::endl;
+   std::cout << "bounce period (simulation 2) = " << 2.0 * trajectory->ElapsedTime() * unit_time_fluid / trajectory->Mirrorings() << " s" << std::endl;
    std::cout << "++++++++++++++++++++" << std::endl;
    std::cout << "Trajectory outputed to " << trajectory_file << std::endl;
    std::cout << std::endl;
 
-   trajectory->PrintCSV(trajectory_file, true);
+   trajectory->PrintCSV(trajectory_file,false);
    
    return 0;
 };

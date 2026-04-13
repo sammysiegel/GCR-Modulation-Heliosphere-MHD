@@ -86,23 +86,17 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-@ENABLE_MPI_TRUE@am__append_1 = $(MPI_CFLAGS)
-@ENABLE_MPI_TRUE@am__append_2 = $(MPI_LIBS)
-@ENABLE_GSL_TRUE@am__append_3 = $(GSL_LIBS) $(GSL_CBLAS_LIB)
 bin_PROGRAMS = main_test_dipole_visual$(EXEEXT) \
-	main_test_turb_waves$(EXEEXT) \
-	main_generate_cartesian_parker_spiral$(EXEEXT) \
-	main_test_cartesian_parker_spiral$(EXEEXT) \
-	main_test_solarwind_parker_spiral$(EXEEXT) \
+	main_test_turb_waves$(EXEEXT) main_test_parker_spiral$(EXEEXT) \
 	main_test_init_cond_records$(EXEEXT) \
 	main_test_dipole_periods$(EXEEXT) \
 	main_test_pa_distro_isotrop$(EXEEXT) \
 	main_test_pa_scatt$(EXEEXT) main_test_perp_diff$(EXEEXT) \
 	main_test_full_diff$(EXEEXT) main_test_diff_shock_acc$(EXEEXT) \
 	main_postprocess_diff_shock_acc$(EXEEXT) \
-	main_generate_cartesian_solarwind_background$(EXEEXT) \
 	main_test_modulation_cartesian_parker$(EXEEXT) \
-	main_postprocess_modulation_cartesian_parker$(EXEEXT)
+	main_postprocess_modulation_cartesian_parker$(EXEEXT) \
+	main_generate_cartesian_solarwind_background$(EXEEXT)
 subdir = benchmarks
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -116,19 +110,6 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
-am_main_generate_cartesian_parker_spiral_OBJECTS =  \
-	main_generate_cartesian_parker_spiral.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/background_solarwind.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/background_base.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/background_base_visual.$(OBJEXT) \
-	$(SPBL_COMMON_DIR)/matrix.$(OBJEXT) \
-	$(SPBL_COMMON_DIR)/vectors.$(OBJEXT) \
-	$(SPBL_COMMON_DIR)/params.$(OBJEXT) \
-	$(SPBL_COMMON_DIR)/physics.$(OBJEXT) \
-	$(SPBL_COMMON_DIR)/data_container.$(OBJEXT)
-main_generate_cartesian_parker_spiral_OBJECTS =  \
-	$(am_main_generate_cartesian_parker_spiral_OBJECTS)
-main_generate_cartesian_parker_spiral_LDADD = $(LDADD)
 am_main_generate_cartesian_solarwind_background_OBJECTS =  \
 	main_generate_cartesian_solarwind_background.$(OBJEXT) \
 	$(SPBL_SOURCE_DIR)/background_solarwind.$(OBJEXT) \
@@ -141,7 +122,9 @@ am_main_generate_cartesian_solarwind_background_OBJECTS =  \
 	$(SPBL_COMMON_DIR)/data_container.$(OBJEXT)
 main_generate_cartesian_solarwind_background_OBJECTS =  \
 	$(am_main_generate_cartesian_solarwind_background_OBJECTS)
-main_generate_cartesian_solarwind_background_LDADD = $(LDADD)
+am__DEPENDENCIES_1 =
+main_generate_cartesian_solarwind_background_DEPENDENCIES =  \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 am_main_postprocess_diff_shock_acc_OBJECTS =  \
 	main_postprocess_diff_shock_acc.$(OBJEXT) \
 	$(SPBL_COMMON_DIR)/matrix.$(OBJEXT) \
@@ -151,7 +134,8 @@ am_main_postprocess_diff_shock_acc_OBJECTS =  \
 	$(SPBL_COMMON_DIR)/data_container.$(OBJEXT)
 main_postprocess_diff_shock_acc_OBJECTS =  \
 	$(am_main_postprocess_diff_shock_acc_OBJECTS)
-main_postprocess_diff_shock_acc_LDADD = $(LDADD)
+main_postprocess_diff_shock_acc_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 am_main_postprocess_modulation_cartesian_parker_OBJECTS =  \
 	main_postprocess_modulation_cartesian_parker.$(OBJEXT) \
 	$(SPBL_COMMON_DIR)/matrix.$(OBJEXT) \
@@ -161,40 +145,8 @@ am_main_postprocess_modulation_cartesian_parker_OBJECTS =  \
 	$(SPBL_COMMON_DIR)/data_container.$(OBJEXT)
 main_postprocess_modulation_cartesian_parker_OBJECTS =  \
 	$(am_main_postprocess_modulation_cartesian_parker_OBJECTS)
-main_postprocess_modulation_cartesian_parker_LDADD = $(LDADD)
-am_main_test_cartesian_parker_spiral_OBJECTS =  \
-	main_test_cartesian_parker_spiral.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/trajectory_fieldline.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/trajectory_base.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/distribution_base.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/background_server_cartesian.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/background_server.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/background_base.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/boundary_momentum.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/boundary_space.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/boundary_time.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/boundary_base.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/initial_time.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/initial_space.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/initial_momentum.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/initial_base.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/diffusion_base.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/source_base.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/server_cartesian.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/server_base.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/cache_lru.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/block_cartesian.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/block_base.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/reader_cartesian.$(OBJEXT) \
-	$(SPBL_COMMON_DIR)/mpi_config.$(OBJEXT) \
-	$(SPBL_COMMON_DIR)/data_container.$(OBJEXT) \
-	$(SPBL_COMMON_DIR)/matrix.$(OBJEXT) \
-	$(SPBL_COMMON_DIR)/vectors.$(OBJEXT) \
-	$(SPBL_COMMON_DIR)/params.$(OBJEXT) \
-	$(SPBL_COMMON_DIR)/physics.$(OBJEXT)
-main_test_cartesian_parker_spiral_OBJECTS =  \
-	$(am_main_test_cartesian_parker_spiral_OBJECTS)
-main_test_cartesian_parker_spiral_LDADD = $(LDADD)
+main_postprocess_modulation_cartesian_parker_DEPENDENCIES =  \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 am_main_test_diff_shock_acc_OBJECTS =  \
 	main_test_diff_shock_acc.$(OBJEXT) \
 	$(SPBL_SOURCE_DIR)/simulation.$(OBJEXT) \
@@ -227,7 +179,8 @@ am_main_test_diff_shock_acc_OBJECTS =  \
 	$(SPBL_COMMON_DIR)/data_container.$(OBJEXT)
 main_test_diff_shock_acc_OBJECTS =  \
 	$(am_main_test_diff_shock_acc_OBJECTS)
-main_test_diff_shock_acc_LDADD = $(LDADD)
+main_test_diff_shock_acc_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 am_main_test_dipole_periods_OBJECTS =  \
 	main_test_dipole_periods.$(OBJEXT) \
 	$(SPBL_SOURCE_DIR)/trajectory_guiding.$(OBJEXT) \
@@ -254,18 +207,35 @@ am_main_test_dipole_periods_OBJECTS =  \
 	$(SPBL_COMMON_DIR)/physics.$(OBJEXT)
 main_test_dipole_periods_OBJECTS =  \
 	$(am_main_test_dipole_periods_OBJECTS)
-main_test_dipole_periods_LDADD = $(LDADD)
+main_test_dipole_periods_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 am_main_test_dipole_visual_OBJECTS =  \
 	main_test_dipole_visual.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/trajectory_base.$(OBJEXT) \
 	$(SPBL_SOURCE_DIR)/background_dipole.$(OBJEXT) \
 	$(SPBL_SOURCE_DIR)/background_base.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/background_base_visual.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/boundary_momentum.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/boundary_space.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/boundary_time.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/boundary_base.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/initial_time.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/initial_space.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/initial_momentum.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/initial_base.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/diffusion_base.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/distribution_base.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/source_base.$(OBJEXT) \
+	$(SPBL_COMMON_DIR)/mpi_config.$(OBJEXT) \
 	$(SPBL_COMMON_DIR)/data_container.$(OBJEXT) \
 	$(SPBL_COMMON_DIR)/matrix.$(OBJEXT) \
 	$(SPBL_COMMON_DIR)/vectors.$(OBJEXT) \
-	$(SPBL_COMMON_DIR)/params.$(OBJEXT)
+	$(SPBL_COMMON_DIR)/params.$(OBJEXT) \
+	$(SPBL_COMMON_DIR)/physics.$(OBJEXT)
 main_test_dipole_visual_OBJECTS =  \
 	$(am_main_test_dipole_visual_OBJECTS)
-main_test_dipole_visual_LDADD = $(LDADD)
+main_test_dipole_visual_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 am_main_test_full_diff_OBJECTS = main_test_full_diff.$(OBJEXT) \
 	$(SPBL_SOURCE_DIR)/simulation.$(OBJEXT) \
 	$(SPBL_SOURCE_DIR)/distribution_other.$(OBJEXT) \
@@ -293,7 +263,8 @@ am_main_test_full_diff_OBJECTS = main_test_full_diff.$(OBJEXT) \
 	$(SPBL_COMMON_DIR)/physics.$(OBJEXT) \
 	$(SPBL_COMMON_DIR)/data_container.$(OBJEXT)
 main_test_full_diff_OBJECTS = $(am_main_test_full_diff_OBJECTS)
-main_test_full_diff_LDADD = $(LDADD)
+main_test_full_diff_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 am_main_test_init_cond_records_OBJECTS =  \
 	main_test_init_cond_records.$(OBJEXT) \
 	$(SPBL_SOURCE_DIR)/simulation.$(OBJEXT) \
@@ -321,7 +292,8 @@ am_main_test_init_cond_records_OBJECTS =  \
 	$(SPBL_COMMON_DIR)/data_container.$(OBJEXT)
 main_test_init_cond_records_OBJECTS =  \
 	$(am_main_test_init_cond_records_OBJECTS)
-main_test_init_cond_records_LDADD = $(LDADD)
+main_test_init_cond_records_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 am_main_test_modulation_cartesian_parker_OBJECTS =  \
 	main_test_modulation_cartesian_parker.$(OBJEXT) \
 	$(SPBL_SOURCE_DIR)/simulation.$(OBJEXT) \
@@ -359,7 +331,8 @@ am_main_test_modulation_cartesian_parker_OBJECTS =  \
 	$(SPBL_COMMON_DIR)/physics.$(OBJEXT)
 main_test_modulation_cartesian_parker_OBJECTS =  \
 	$(am_main_test_modulation_cartesian_parker_OBJECTS)
-main_test_modulation_cartesian_parker_LDADD = $(LDADD)
+main_test_modulation_cartesian_parker_DEPENDENCIES =  \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 am_main_test_pa_distro_isotrop_OBJECTS =  \
 	main_test_pa_distro_isotrop.$(OBJEXT) \
 	$(SPBL_SOURCE_DIR)/simulation.$(OBJEXT) \
@@ -391,7 +364,8 @@ am_main_test_pa_distro_isotrop_OBJECTS =  \
 	$(SPBL_COMMON_DIR)/data_container.$(OBJEXT)
 main_test_pa_distro_isotrop_OBJECTS =  \
 	$(am_main_test_pa_distro_isotrop_OBJECTS)
-main_test_pa_distro_isotrop_LDADD = $(LDADD)
+main_test_pa_distro_isotrop_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 am_main_test_pa_scatt_OBJECTS = main_test_pa_scatt.$(OBJEXT) \
 	$(SPBL_SOURCE_DIR)/simulation.$(OBJEXT) \
 	$(SPBL_SOURCE_DIR)/distribution_other.$(OBJEXT) \
@@ -421,7 +395,36 @@ am_main_test_pa_scatt_OBJECTS = main_test_pa_scatt.$(OBJEXT) \
 	$(SPBL_COMMON_DIR)/physics.$(OBJEXT) \
 	$(SPBL_COMMON_DIR)/data_container.$(OBJEXT)
 main_test_pa_scatt_OBJECTS = $(am_main_test_pa_scatt_OBJECTS)
-main_test_pa_scatt_LDADD = $(LDADD)
+main_test_pa_scatt_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
+am_main_test_parker_spiral_OBJECTS =  \
+	main_test_parker_spiral.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/trajectory_fieldline.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/trajectory_base.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/background_solarwind.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/background_base.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/background_base_visual.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/boundary_momentum.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/boundary_space.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/boundary_time.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/boundary_base.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/initial_time.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/initial_space.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/initial_momentum.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/initial_base.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/diffusion_base.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/distribution_base.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/source_base.$(OBJEXT) \
+	$(SPBL_COMMON_DIR)/mpi_config.$(OBJEXT) \
+	$(SPBL_COMMON_DIR)/data_container.$(OBJEXT) \
+	$(SPBL_COMMON_DIR)/matrix.$(OBJEXT) \
+	$(SPBL_COMMON_DIR)/vectors.$(OBJEXT) \
+	$(SPBL_COMMON_DIR)/params.$(OBJEXT) \
+	$(SPBL_COMMON_DIR)/physics.$(OBJEXT)
+main_test_parker_spiral_OBJECTS =  \
+	$(am_main_test_parker_spiral_OBJECTS)
+main_test_parker_spiral_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 am_main_test_perp_diff_OBJECTS = main_test_perp_diff.$(OBJEXT) \
 	$(SPBL_SOURCE_DIR)/simulation.$(OBJEXT) \
 	$(SPBL_SOURCE_DIR)/distribution_other.$(OBJEXT) \
@@ -450,38 +453,14 @@ am_main_test_perp_diff_OBJECTS = main_test_perp_diff.$(OBJEXT) \
 	$(SPBL_COMMON_DIR)/physics.$(OBJEXT) \
 	$(SPBL_COMMON_DIR)/data_container.$(OBJEXT)
 main_test_perp_diff_OBJECTS = $(am_main_test_perp_diff_OBJECTS)
-main_test_perp_diff_LDADD = $(LDADD)
-am_main_test_solarwind_parker_spiral_OBJECTS =  \
-	main_test_solarwind_parker_spiral.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/trajectory_fieldline.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/trajectory_base.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/distribution_base.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/background_solarwind.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/background_base.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/boundary_momentum.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/boundary_space.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/boundary_time.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/boundary_base.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/initial_time.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/initial_space.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/initial_momentum.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/initial_base.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/diffusion_base.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/source_base.$(OBJEXT) \
-	$(SPBL_COMMON_DIR)/data_container.$(OBJEXT) \
-	$(SPBL_COMMON_DIR)/matrix.$(OBJEXT) \
-	$(SPBL_COMMON_DIR)/vectors.$(OBJEXT) \
-	$(SPBL_COMMON_DIR)/params.$(OBJEXT) \
-	$(SPBL_COMMON_DIR)/physics.$(OBJEXT)
-main_test_solarwind_parker_spiral_OBJECTS =  \
-	$(am_main_test_solarwind_parker_spiral_OBJECTS)
-main_test_solarwind_parker_spiral_LDADD = $(LDADD)
+main_test_perp_diff_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 am_main_test_turb_waves_OBJECTS = main_test_turb_waves.$(OBJEXT) \
 	$(SPBL_SOURCE_DIR)/trajectory_fieldline.$(OBJEXT) \
 	$(SPBL_SOURCE_DIR)/trajectory_base.$(OBJEXT) \
-	$(SPBL_SOURCE_DIR)/distribution_base.$(OBJEXT) \
 	$(SPBL_SOURCE_DIR)/background_waves.$(OBJEXT) \
 	$(SPBL_SOURCE_DIR)/background_base.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/background_base_visual.$(OBJEXT) \
 	$(SPBL_SOURCE_DIR)/boundary_momentum.$(OBJEXT) \
 	$(SPBL_SOURCE_DIR)/boundary_space.$(OBJEXT) \
 	$(SPBL_SOURCE_DIR)/boundary_time.$(OBJEXT) \
@@ -491,14 +470,17 @@ am_main_test_turb_waves_OBJECTS = main_test_turb_waves.$(OBJEXT) \
 	$(SPBL_SOURCE_DIR)/initial_momentum.$(OBJEXT) \
 	$(SPBL_SOURCE_DIR)/initial_base.$(OBJEXT) \
 	$(SPBL_SOURCE_DIR)/diffusion_base.$(OBJEXT) \
+	$(SPBL_SOURCE_DIR)/distribution_base.$(OBJEXT) \
 	$(SPBL_SOURCE_DIR)/source_base.$(OBJEXT) \
+	$(SPBL_COMMON_DIR)/mpi_config.$(OBJEXT) \
 	$(SPBL_COMMON_DIR)/data_container.$(OBJEXT) \
 	$(SPBL_COMMON_DIR)/matrix.$(OBJEXT) \
 	$(SPBL_COMMON_DIR)/vectors.$(OBJEXT) \
 	$(SPBL_COMMON_DIR)/params.$(OBJEXT) \
 	$(SPBL_COMMON_DIR)/physics.$(OBJEXT)
 main_test_turb_waves_OBJECTS = $(am_main_test_turb_waves_OBJECTS)
-main_test_turb_waves_LDADD = $(LDADD)
+main_test_turb_waves_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -560,11 +542,9 @@ am__depfiles_remade = $(SPBL_COMMON_DIR)/$(DEPDIR)/data_container.Po \
 	$(SPBL_SOURCE_DIR)/$(DEPDIR)/trajectory_guiding_scatt.Po \
 	$(SPBL_SOURCE_DIR)/$(DEPDIR)/trajectory_parker.Po \
 	$(SPBL_SOURCE_DIR)/$(DEPDIR)/trajectory_parker_source.Po \
-	./$(DEPDIR)/main_generate_cartesian_parker_spiral.Po \
 	./$(DEPDIR)/main_generate_cartesian_solarwind_background.Po \
 	./$(DEPDIR)/main_postprocess_diff_shock_acc.Po \
 	./$(DEPDIR)/main_postprocess_modulation_cartesian_parker.Po \
-	./$(DEPDIR)/main_test_cartesian_parker_spiral.Po \
 	./$(DEPDIR)/main_test_diff_shock_acc.Po \
 	./$(DEPDIR)/main_test_dipole_periods.Po \
 	./$(DEPDIR)/main_test_dipole_visual.Po \
@@ -573,8 +553,8 @@ am__depfiles_remade = $(SPBL_COMMON_DIR)/$(DEPDIR)/data_container.Po \
 	./$(DEPDIR)/main_test_modulation_cartesian_parker.Po \
 	./$(DEPDIR)/main_test_pa_distro_isotrop.Po \
 	./$(DEPDIR)/main_test_pa_scatt.Po \
+	./$(DEPDIR)/main_test_parker_spiral.Po \
 	./$(DEPDIR)/main_test_perp_diff.Po \
-	./$(DEPDIR)/main_test_solarwind_parker_spiral.Po \
 	./$(DEPDIR)/main_test_turb_waves.Po
 am__mv = mv -f
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
@@ -583,6 +563,7 @@ AM_V_CXX = $(am__v_CXX_@AM_V@)
 am__v_CXX_ = $(am__v_CXX_@AM_DEFAULT_V@)
 am__v_CXX_0 = @echo "  CXX     " $@;
 am__v_CXX_1 = 
+CXXLD = $(CXX)
 CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
 AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
@@ -601,11 +582,9 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(main_generate_cartesian_parker_spiral_SOURCES) \
-	$(main_generate_cartesian_solarwind_background_SOURCES) \
+SOURCES = $(main_generate_cartesian_solarwind_background_SOURCES) \
 	$(main_postprocess_diff_shock_acc_SOURCES) \
 	$(main_postprocess_modulation_cartesian_parker_SOURCES) \
-	$(main_test_cartesian_parker_spiral_SOURCES) \
 	$(main_test_diff_shock_acc_SOURCES) \
 	$(main_test_dipole_periods_SOURCES) \
 	$(main_test_dipole_visual_SOURCES) \
@@ -613,14 +592,13 @@ SOURCES = $(main_generate_cartesian_parker_spiral_SOURCES) \
 	$(main_test_init_cond_records_SOURCES) \
 	$(main_test_modulation_cartesian_parker_SOURCES) \
 	$(main_test_pa_distro_isotrop_SOURCES) \
-	$(main_test_pa_scatt_SOURCES) $(main_test_perp_diff_SOURCES) \
-	$(main_test_solarwind_parker_spiral_SOURCES) \
-	$(main_test_turb_waves_SOURCES)
-DIST_SOURCES = $(main_generate_cartesian_parker_spiral_SOURCES) \
+	$(main_test_pa_scatt_SOURCES) \
+	$(main_test_parker_spiral_SOURCES) \
+	$(main_test_perp_diff_SOURCES) $(main_test_turb_waves_SOURCES)
+DIST_SOURCES =  \
 	$(main_generate_cartesian_solarwind_background_SOURCES) \
 	$(main_postprocess_diff_shock_acc_SOURCES) \
 	$(main_postprocess_modulation_cartesian_parker_SOURCES) \
-	$(main_test_cartesian_parker_spiral_SOURCES) \
 	$(main_test_diff_shock_acc_SOURCES) \
 	$(main_test_dipole_periods_SOURCES) \
 	$(main_test_dipole_visual_SOURCES) \
@@ -628,9 +606,9 @@ DIST_SOURCES = $(main_generate_cartesian_parker_spiral_SOURCES) \
 	$(main_test_init_cond_records_SOURCES) \
 	$(main_test_modulation_cartesian_parker_SOURCES) \
 	$(main_test_pa_distro_isotrop_SOURCES) \
-	$(main_test_pa_scatt_SOURCES) $(main_test_perp_diff_SOURCES) \
-	$(main_test_solarwind_parker_spiral_SOURCES) \
-	$(main_test_turb_waves_SOURCES)
+	$(main_test_pa_scatt_SOURCES) \
+	$(main_test_parker_spiral_SOURCES) \
+	$(main_test_perp_diff_SOURCES) $(main_test_turb_waves_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -668,13 +646,10 @@ CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
 CPPFLAGS = @CPPFLAGS@
-CUDA_CFLAGS = @CUDA_CFLAGS@
-CUDA_LIBS = @CUDA_LIBS@
 CXX = @CXX@
 CXXCPP = @CXXCPP@
 CXXDEPMODE = @CXXDEPMODE@
 CXXFLAGS = @CXXFLAGS@
-CXXLD = @CXXLD@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
@@ -693,7 +668,6 @@ INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
-LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
@@ -702,7 +676,6 @@ MAKEINFO = @MAKEINFO@
 MKDIR_P = @MKDIR_P@
 MPI_CFLAGS = @MPI_CFLAGS@
 MPI_LIBS = @MPI_LIBS@
-NVCC = @NVCC@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
@@ -764,127 +737,21 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-AM_FCFLAGS = -J$(BATL_HOME)/share/include
-AM_CXXFLAGS = $(am__append_1)
-AM_LDFLAGS = $(am__append_2) $(am__append_3)
+
+#AM_CXXFLAGS = $(MPI_CFLAGS) -DGEO_DEBUG
+AM_CXXFLAGS = $(MPI_CFLAGS)
+AM_LDFLAGS = $(MPI_LIBS)
+AM_FCFLAGS = -J$(BATL_INCL_DIR)
 SPBL_COMMON_DIR = ../common
 SPBL_SOURCE_DIR = ../src
 main_test_dipole_visual_SOURCES = main_test_dipole_visual.cc \
+   $(SPBL_SOURCE_DIR)/trajectory_base.cc \
+   $(SPBL_SOURCE_DIR)/trajectory_base.hh \
    $(SPBL_SOURCE_DIR)/background_dipole.cc \
    $(SPBL_SOURCE_DIR)/background_dipole.hh \
    $(SPBL_SOURCE_DIR)/background_base.cc \
    $(SPBL_SOURCE_DIR)/background_base.hh \
-   $(SPBL_COMMON_DIR)/data_container.hh \
-   $(SPBL_COMMON_DIR)/data_container.cc \
-   $(SPBL_COMMON_DIR)/matrix.cc \
-   $(SPBL_COMMON_DIR)/matrix.hh \
-   $(SPBL_COMMON_DIR)/vectors.cc \
-   $(SPBL_COMMON_DIR)/vectors.hh \
-   $(SPBL_COMMON_DIR)/multi_index.hh \
-   $(SPBL_COMMON_DIR)/simple_array.hh \
-   $(SPBL_COMMON_DIR)/arithmetic.hh \
-   $(SPBL_COMMON_DIR)/params.cc \
-   $(SPBL_COMMON_DIR)/params.hh \
-   $(SPBL_COMMON_DIR)/definitions.hh \
-   $(SPBL_COMMON_DIR)/print_warn.hh \
-   $(SPBL_COMMON_DIR)/specie.hh \
-   $(SPBL_COMMON_DIR)/physical_constants.hh \
-   $(SPBL_COMMON_DIR)/random.hh \
-   $(SPBL_COMMON_DIR)/gpu_config.hh
-
-main_test_turb_waves_SOURCES = main_test_turb_waves.cc \
-   $(SPBL_SOURCE_DIR)/trajectory_fieldline.cc \
-   $(SPBL_SOURCE_DIR)/trajectory_fieldline.hh \
-   $(SPBL_SOURCE_DIR)/trajectory_base.cc \
-   $(SPBL_SOURCE_DIR)/trajectory_base.hh \
-   $(SPBL_SOURCE_DIR)/distribution_base.cc \
-   $(SPBL_SOURCE_DIR)/distribution_base.hh \
-   $(SPBL_SOURCE_DIR)/background_waves.cc \
-   $(SPBL_SOURCE_DIR)/background_waves.hh \
-   $(SPBL_SOURCE_DIR)/background_base.cc \
-   $(SPBL_SOURCE_DIR)/background_base.hh \
-   $(SPBL_SOURCE_DIR)/boundary_momentum.cc \
-   $(SPBL_SOURCE_DIR)/boundary_momentum.hh \
-   $(SPBL_SOURCE_DIR)/boundary_space.cc \
-   $(SPBL_SOURCE_DIR)/boundary_space.hh \
-   $(SPBL_SOURCE_DIR)/boundary_time.cc \
-   $(SPBL_SOURCE_DIR)/boundary_time.hh \
-   $(SPBL_SOURCE_DIR)/boundary_base.cc \
-   $(SPBL_SOURCE_DIR)/boundary_base.hh \
-   $(SPBL_SOURCE_DIR)/initial_time.cc \
-   $(SPBL_SOURCE_DIR)/initial_time.hh \
-   $(SPBL_SOURCE_DIR)/initial_space.cc \
-   $(SPBL_SOURCE_DIR)/initial_space.hh \
-   $(SPBL_SOURCE_DIR)/initial_momentum.cc \
-   $(SPBL_SOURCE_DIR)/initial_momentum.hh \
-   $(SPBL_SOURCE_DIR)/initial_base.cc \
-   $(SPBL_SOURCE_DIR)/initial_base.hh \
-   $(SPBL_SOURCE_DIR)/diffusion_base.cc \
-   $(SPBL_SOURCE_DIR)/diffusion_base.hh \
-   $(SPBL_SOURCE_DIR)/source_base.cc \
-   $(SPBL_SOURCE_DIR)/source_base.hh \
-   $(SPBL_SOURCE_DIR)/traj_config.hh \
-   $(SPBL_COMMON_DIR)/data_container.hh \
-   $(SPBL_COMMON_DIR)/data_container.cc \
-   $(SPBL_COMMON_DIR)/matrix.cc \
-   $(SPBL_COMMON_DIR)/matrix.hh \
-   $(SPBL_COMMON_DIR)/coordinates.hh \
-   $(SPBL_COMMON_DIR)/vectors.cc \
-   $(SPBL_COMMON_DIR)/vectors.hh \
-   $(SPBL_COMMON_DIR)/multi_index.hh \
-   $(SPBL_COMMON_DIR)/simple_array.hh \
-   $(SPBL_COMMON_DIR)/arithmetic.hh \
-   $(SPBL_COMMON_DIR)/params.cc \
-   $(SPBL_COMMON_DIR)/params.hh \
-   $(SPBL_COMMON_DIR)/physics.cc \
-   $(SPBL_COMMON_DIR)/physics.hh \
-   $(SPBL_COMMON_DIR)/print_warn.hh \
-   $(SPBL_COMMON_DIR)/specie.hh \
-   $(SPBL_COMMON_DIR)/physical_constants.hh \
-   $(SPBL_COMMON_DIR)/random.hh \
-   $(SPBL_COMMON_DIR)/rk_config.hh \
-   $(SPBL_COMMON_DIR)/definitions.hh \
-   $(SPBL_COMMON_DIR)/gpu_config.hh
-
-main_generate_cartesian_parker_spiral_SOURCES = main_generate_cartesian_parker_spiral.cc \
-   $(SPBL_SOURCE_DIR)/background_solarwind.cc \
-   $(SPBL_SOURCE_DIR)/background_solarwind.hh \
-   $(SPBL_SOURCE_DIR)/background_base.cc \
-   $(SPBL_SOURCE_DIR)/background_base.hh \
    $(SPBL_SOURCE_DIR)/background_base_visual.cc \
-   $(SPBL_COMMON_DIR)/matrix.cc \
-   $(SPBL_COMMON_DIR)/matrix.hh \
-   $(SPBL_COMMON_DIR)/coordinates.hh \
-   $(SPBL_COMMON_DIR)/vectors.cc \
-   $(SPBL_COMMON_DIR)/vectors.hh \
-   $(SPBL_COMMON_DIR)/multi_index.hh \
-   $(SPBL_COMMON_DIR)/simple_array.hh \
-   $(SPBL_COMMON_DIR)/arithmetic.hh \
-   $(SPBL_COMMON_DIR)/params.cc \
-   $(SPBL_COMMON_DIR)/params.hh \
-   $(SPBL_COMMON_DIR)/physics.cc \
-   $(SPBL_COMMON_DIR)/physics.hh \
-   $(SPBL_COMMON_DIR)/specie.hh \
-   $(SPBL_COMMON_DIR)/physical_constants.hh \
-   $(SPBL_COMMON_DIR)/data_container.cc \
-   $(SPBL_COMMON_DIR)/data_container.hh \
-   $(SPBL_COMMON_DIR)/definitions.hh \
-   $(SPBL_COMMON_DIR)/print_warn.hh \
-   $(SPBL_COMMON_DIR)/gpu_config.hh
-
-main_test_cartesian_parker_spiral_SOURCES = main_test_cartesian_parker_spiral.cc \
-   $(SPBL_SOURCE_DIR)/trajectory_fieldline.cc \
-   $(SPBL_SOURCE_DIR)/trajectory_fieldline.hh \
-   $(SPBL_SOURCE_DIR)/trajectory_base.cc \
-   $(SPBL_SOURCE_DIR)/trajectory_base.hh \
-   $(SPBL_SOURCE_DIR)/distribution_base.cc \
-   $(SPBL_SOURCE_DIR)/distribution_base.hh \
-   $(SPBL_SOURCE_DIR)/background_server_cartesian.cc \
-   $(SPBL_SOURCE_DIR)/background_server_cartesian.hh \
-   $(SPBL_SOURCE_DIR)/background_server.cc \
-   $(SPBL_SOURCE_DIR)/background_server.hh \
-   $(SPBL_SOURCE_DIR)/background_base.cc \
-   $(SPBL_SOURCE_DIR)/background_base.hh \
    $(SPBL_SOURCE_DIR)/boundary_momentum.cc \
    $(SPBL_SOURCE_DIR)/boundary_momentum.hh \
    $(SPBL_SOURCE_DIR)/boundary_space.cc \
@@ -903,29 +770,19 @@ main_test_cartesian_parker_spiral_SOURCES = main_test_cartesian_parker_spiral.cc
    $(SPBL_SOURCE_DIR)/initial_base.hh \
    $(SPBL_SOURCE_DIR)/diffusion_base.cc \
    $(SPBL_SOURCE_DIR)/diffusion_base.hh \
+   $(SPBL_SOURCE_DIR)/distribution_base.cc \
+   $(SPBL_SOURCE_DIR)/distribution_base.hh \
    $(SPBL_SOURCE_DIR)/source_base.cc \
    $(SPBL_SOURCE_DIR)/source_base.hh \
    $(SPBL_SOURCE_DIR)/traj_config.hh \
    $(SPBL_SOURCE_DIR)/server_config.hh \
-   $(SPBL_SOURCE_DIR)/server_cartesian.cc \
-   $(SPBL_SOURCE_DIR)/server_cartesian.hh \
-   $(SPBL_SOURCE_DIR)/server_base.cc \
-   $(SPBL_SOURCE_DIR)/server_base.hh \
-   $(SPBL_SOURCE_DIR)/cache_lru.cc \
-   $(SPBL_SOURCE_DIR)/cache_lru.hh \
-   $(SPBL_SOURCE_DIR)/block_cartesian.cc \
-   $(SPBL_SOURCE_DIR)/block_cartesian.hh \
-   $(SPBL_SOURCE_DIR)/block_base.cc \
-   $(SPBL_SOURCE_DIR)/block_base.hh \
-   $(SPBL_SOURCE_DIR)/reader_cartesian.cc \
-   $(SPBL_SOURCE_DIR)/reader_cartesian.hh \
+   $(SPBL_COMMON_DIR)/workload_manager.hh \
    $(SPBL_COMMON_DIR)/mpi_config.cc \
    $(SPBL_COMMON_DIR)/mpi_config.hh \
    $(SPBL_COMMON_DIR)/data_container.hh \
    $(SPBL_COMMON_DIR)/data_container.cc \
    $(SPBL_COMMON_DIR)/matrix.cc \
    $(SPBL_COMMON_DIR)/matrix.hh \
-   $(SPBL_COMMON_DIR)/coordinates.hh \
    $(SPBL_COMMON_DIR)/vectors.cc \
    $(SPBL_COMMON_DIR)/vectors.hh \
    $(SPBL_COMMON_DIR)/multi_index.hh \
@@ -935,25 +792,22 @@ main_test_cartesian_parker_spiral_SOURCES = main_test_cartesian_parker_spiral.cc
    $(SPBL_COMMON_DIR)/params.hh \
    $(SPBL_COMMON_DIR)/physics.cc \
    $(SPBL_COMMON_DIR)/physics.hh \
-   $(SPBL_COMMON_DIR)/print_warn.hh \
-   $(SPBL_COMMON_DIR)/specie.hh \
-   $(SPBL_COMMON_DIR)/physical_constants.hh \
    $(SPBL_COMMON_DIR)/random.hh \
    $(SPBL_COMMON_DIR)/rk_config.hh \
    $(SPBL_COMMON_DIR)/definitions.hh \
-   $(SPBL_COMMON_DIR)/gpu_config.hh
+   $(SPBL_COMMON_DIR)/print_warn.hh
 
-main_test_solarwind_parker_spiral_SOURCES = main_test_solarwind_parker_spiral.cc \
+main_test_dipole_visual_LDADD = $(MPI_LIBS) $(GSL_LIBS)
+main_test_turb_waves_SOURCES = main_test_turb_waves.cc \
    $(SPBL_SOURCE_DIR)/trajectory_fieldline.cc \
    $(SPBL_SOURCE_DIR)/trajectory_fieldline.hh \
    $(SPBL_SOURCE_DIR)/trajectory_base.cc \
    $(SPBL_SOURCE_DIR)/trajectory_base.hh \
-   $(SPBL_SOURCE_DIR)/distribution_base.cc \
-   $(SPBL_SOURCE_DIR)/distribution_base.hh \
-   $(SPBL_SOURCE_DIR)/background_solarwind.cc \
-   $(SPBL_SOURCE_DIR)/background_solarwind.hh \
+   $(SPBL_SOURCE_DIR)/background_waves.cc \
+   $(SPBL_SOURCE_DIR)/background_waves.hh \
    $(SPBL_SOURCE_DIR)/background_base.cc \
    $(SPBL_SOURCE_DIR)/background_base.hh \
+   $(SPBL_SOURCE_DIR)/background_base_visual.cc \
    $(SPBL_SOURCE_DIR)/boundary_momentum.cc \
    $(SPBL_SOURCE_DIR)/boundary_momentum.hh \
    $(SPBL_SOURCE_DIR)/boundary_space.cc \
@@ -972,14 +826,19 @@ main_test_solarwind_parker_spiral_SOURCES = main_test_solarwind_parker_spiral.cc
    $(SPBL_SOURCE_DIR)/initial_base.hh \
    $(SPBL_SOURCE_DIR)/diffusion_base.cc \
    $(SPBL_SOURCE_DIR)/diffusion_base.hh \
+   $(SPBL_SOURCE_DIR)/distribution_base.cc \
+   $(SPBL_SOURCE_DIR)/distribution_base.hh \
    $(SPBL_SOURCE_DIR)/source_base.cc \
    $(SPBL_SOURCE_DIR)/source_base.hh \
    $(SPBL_SOURCE_DIR)/traj_config.hh \
+   $(SPBL_SOURCE_DIR)/server_config.hh \
+   $(SPBL_COMMON_DIR)/workload_manager.hh \
+   $(SPBL_COMMON_DIR)/mpi_config.cc \
+   $(SPBL_COMMON_DIR)/mpi_config.hh \
    $(SPBL_COMMON_DIR)/data_container.hh \
    $(SPBL_COMMON_DIR)/data_container.cc \
    $(SPBL_COMMON_DIR)/matrix.cc \
    $(SPBL_COMMON_DIR)/matrix.hh \
-   $(SPBL_COMMON_DIR)/coordinates.hh \
    $(SPBL_COMMON_DIR)/vectors.cc \
    $(SPBL_COMMON_DIR)/vectors.hh \
    $(SPBL_COMMON_DIR)/multi_index.hh \
@@ -989,14 +848,68 @@ main_test_solarwind_parker_spiral_SOURCES = main_test_solarwind_parker_spiral.cc
    $(SPBL_COMMON_DIR)/params.hh \
    $(SPBL_COMMON_DIR)/physics.cc \
    $(SPBL_COMMON_DIR)/physics.hh \
-   $(SPBL_COMMON_DIR)/print_warn.hh \
-   $(SPBL_COMMON_DIR)/specie.hh \
-   $(SPBL_COMMON_DIR)/physical_constants.hh \
    $(SPBL_COMMON_DIR)/random.hh \
    $(SPBL_COMMON_DIR)/rk_config.hh \
    $(SPBL_COMMON_DIR)/definitions.hh \
-   $(SPBL_COMMON_DIR)/gpu_config.hh
+   $(SPBL_COMMON_DIR)/print_warn.hh
 
+main_test_turb_waves_LDADD = $(MPI_LIBS) $(GSL_LIBS)
+main_test_parker_spiral_SOURCES = main_test_parker_spiral.cc \
+   $(SPBL_SOURCE_DIR)/trajectory_fieldline.cc \
+   $(SPBL_SOURCE_DIR)/trajectory_fieldline.hh \
+   $(SPBL_SOURCE_DIR)/trajectory_base.cc \
+   $(SPBL_SOURCE_DIR)/trajectory_base.hh \
+   $(SPBL_SOURCE_DIR)/background_solarwind.cc \
+   $(SPBL_SOURCE_DIR)/background_solarwind.hh \
+   $(SPBL_SOURCE_DIR)/background_base.cc \
+   $(SPBL_SOURCE_DIR)/background_base.hh \
+   $(SPBL_SOURCE_DIR)/background_base_visual.cc \
+   $(SPBL_SOURCE_DIR)/boundary_momentum.cc \
+   $(SPBL_SOURCE_DIR)/boundary_momentum.hh \
+   $(SPBL_SOURCE_DIR)/boundary_space.cc \
+   $(SPBL_SOURCE_DIR)/boundary_space.hh \
+   $(SPBL_SOURCE_DIR)/boundary_time.cc \
+   $(SPBL_SOURCE_DIR)/boundary_time.hh \
+   $(SPBL_SOURCE_DIR)/boundary_base.cc \
+   $(SPBL_SOURCE_DIR)/boundary_base.hh \
+   $(SPBL_SOURCE_DIR)/initial_time.cc \
+   $(SPBL_SOURCE_DIR)/initial_time.hh \
+   $(SPBL_SOURCE_DIR)/initial_space.cc \
+   $(SPBL_SOURCE_DIR)/initial_space.hh \
+   $(SPBL_SOURCE_DIR)/initial_momentum.cc \
+   $(SPBL_SOURCE_DIR)/initial_momentum.hh \
+   $(SPBL_SOURCE_DIR)/initial_base.cc \
+   $(SPBL_SOURCE_DIR)/initial_base.hh \
+   $(SPBL_SOURCE_DIR)/diffusion_base.cc \
+   $(SPBL_SOURCE_DIR)/diffusion_base.hh \
+   $(SPBL_SOURCE_DIR)/distribution_base.cc \
+   $(SPBL_SOURCE_DIR)/distribution_base.hh \
+   $(SPBL_SOURCE_DIR)/source_base.cc \
+   $(SPBL_SOURCE_DIR)/source_base.hh \
+   $(SPBL_SOURCE_DIR)/traj_config.hh \
+   $(SPBL_SOURCE_DIR)/server_config.hh \
+   $(SPBL_COMMON_DIR)/workload_manager.hh \
+   $(SPBL_COMMON_DIR)/mpi_config.cc \
+   $(SPBL_COMMON_DIR)/mpi_config.hh \
+   $(SPBL_COMMON_DIR)/data_container.hh \
+   $(SPBL_COMMON_DIR)/data_container.cc \
+   $(SPBL_COMMON_DIR)/matrix.cc \
+   $(SPBL_COMMON_DIR)/matrix.hh \
+   $(SPBL_COMMON_DIR)/vectors.cc \
+   $(SPBL_COMMON_DIR)/vectors.hh \
+   $(SPBL_COMMON_DIR)/multi_index.hh \
+   $(SPBL_COMMON_DIR)/simple_array.hh \
+   $(SPBL_COMMON_DIR)/arithmetic.hh \
+   $(SPBL_COMMON_DIR)/params.cc \
+   $(SPBL_COMMON_DIR)/params.hh \
+   $(SPBL_COMMON_DIR)/physics.cc \
+   $(SPBL_COMMON_DIR)/physics.hh \
+   $(SPBL_COMMON_DIR)/random.hh \
+   $(SPBL_COMMON_DIR)/rk_config.hh \
+   $(SPBL_COMMON_DIR)/definitions.hh \
+   $(SPBL_COMMON_DIR)/print_warn.hh
+
+main_test_parker_spiral_LDADD = $(MPI_LIBS) $(GSL_LIBS)
 main_test_init_cond_records_SOURCES = main_test_init_cond_records.cc \
    $(SPBL_SOURCE_DIR)/simulation.cc \
    $(SPBL_SOURCE_DIR)/simulation.hh \
@@ -1038,7 +951,6 @@ main_test_init_cond_records_SOURCES = main_test_init_cond_records.cc \
    $(SPBL_COMMON_DIR)/mpi_config.hh \
    $(SPBL_COMMON_DIR)/matrix.cc \
    $(SPBL_COMMON_DIR)/matrix.hh \
-   $(SPBL_COMMON_DIR)/coordinates.hh \
    $(SPBL_COMMON_DIR)/vectors.cc \
    $(SPBL_COMMON_DIR)/vectors.hh \
    $(SPBL_COMMON_DIR)/multi_index.hh \
@@ -1048,16 +960,14 @@ main_test_init_cond_records_SOURCES = main_test_init_cond_records.cc \
    $(SPBL_COMMON_DIR)/params.hh \
    $(SPBL_COMMON_DIR)/physics.cc \
    $(SPBL_COMMON_DIR)/physics.hh \
-   $(SPBL_COMMON_DIR)/specie.hh \
-   $(SPBL_COMMON_DIR)/physical_constants.hh \
    $(SPBL_COMMON_DIR)/data_container.hh \
    $(SPBL_COMMON_DIR)/data_container.cc \
    $(SPBL_COMMON_DIR)/random.hh \
    $(SPBL_COMMON_DIR)/rk_config.hh \
    $(SPBL_COMMON_DIR)/definitions.hh \
-   $(SPBL_COMMON_DIR)/print_warn.hh \
-   $(SPBL_COMMON_DIR)/gpu_config.hh
+   $(SPBL_COMMON_DIR)/print_warn.hh
 
+main_test_init_cond_records_LDADD = $(MPI_LIBS) $(GSL_LIBS)
 main_test_dipole_periods_SOURCES = main_test_dipole_periods.cc \
    $(SPBL_SOURCE_DIR)/trajectory_guiding.cc \
    $(SPBL_SOURCE_DIR)/trajectory_guiding.hh \
@@ -1099,7 +1009,6 @@ main_test_dipole_periods_SOURCES = main_test_dipole_periods.cc \
    $(SPBL_COMMON_DIR)/data_container.cc \
    $(SPBL_COMMON_DIR)/matrix.cc \
    $(SPBL_COMMON_DIR)/matrix.hh \
-   $(SPBL_COMMON_DIR)/coordinates.hh \
    $(SPBL_COMMON_DIR)/vectors.cc \
    $(SPBL_COMMON_DIR)/vectors.hh \
    $(SPBL_COMMON_DIR)/multi_index.hh \
@@ -1109,14 +1018,12 @@ main_test_dipole_periods_SOURCES = main_test_dipole_periods.cc \
    $(SPBL_COMMON_DIR)/params.hh \
    $(SPBL_COMMON_DIR)/physics.cc \
    $(SPBL_COMMON_DIR)/physics.hh \
-   $(SPBL_COMMON_DIR)/specie.hh \
-   $(SPBL_COMMON_DIR)/physical_constants.hh \
    $(SPBL_COMMON_DIR)/random.hh \
    $(SPBL_COMMON_DIR)/rk_config.hh \
    $(SPBL_COMMON_DIR)/definitions.hh \
-   $(SPBL_COMMON_DIR)/print_warn.hh \
-   $(SPBL_COMMON_DIR)/gpu_config.hh
+   $(SPBL_COMMON_DIR)/print_warn.hh
 
+main_test_dipole_periods_LDADD = $(MPI_LIBS) $(GSL_LIBS)
 main_test_pa_distro_isotrop_SOURCES = main_test_pa_distro_isotrop.cc \
    $(SPBL_SOURCE_DIR)/simulation.cc \
    $(SPBL_SOURCE_DIR)/simulation.hh \
@@ -1166,7 +1073,6 @@ main_test_pa_distro_isotrop_SOURCES = main_test_pa_distro_isotrop.cc \
    $(SPBL_COMMON_DIR)/mpi_config.hh \
    $(SPBL_COMMON_DIR)/matrix.cc \
    $(SPBL_COMMON_DIR)/matrix.hh \
-   $(SPBL_COMMON_DIR)/coordinates.hh \
    $(SPBL_COMMON_DIR)/vectors.cc \
    $(SPBL_COMMON_DIR)/vectors.hh \
    $(SPBL_COMMON_DIR)/multi_index.hh \
@@ -1176,16 +1082,14 @@ main_test_pa_distro_isotrop_SOURCES = main_test_pa_distro_isotrop.cc \
    $(SPBL_COMMON_DIR)/params.hh \
    $(SPBL_COMMON_DIR)/physics.cc \
    $(SPBL_COMMON_DIR)/physics.hh \
-   $(SPBL_COMMON_DIR)/specie.hh \
-   $(SPBL_COMMON_DIR)/physical_constants.hh \
    $(SPBL_COMMON_DIR)/data_container.hh \
    $(SPBL_COMMON_DIR)/data_container.cc \
    $(SPBL_COMMON_DIR)/random.hh \
    $(SPBL_COMMON_DIR)/rk_config.hh \
    $(SPBL_COMMON_DIR)/definitions.hh \
-   $(SPBL_COMMON_DIR)/print_warn.hh \
-   $(SPBL_COMMON_DIR)/gpu_config.hh
+   $(SPBL_COMMON_DIR)/print_warn.hh
 
+main_test_pa_distro_isotrop_LDADD = $(MPI_LIBS) $(GSL_LIBS)
 main_test_pa_scatt_SOURCES = main_test_pa_scatt.cc \
    $(SPBL_SOURCE_DIR)/simulation.cc \
    $(SPBL_SOURCE_DIR)/simulation.hh \
@@ -1235,7 +1139,6 @@ main_test_pa_scatt_SOURCES = main_test_pa_scatt.cc \
    $(SPBL_COMMON_DIR)/mpi_config.hh \
    $(SPBL_COMMON_DIR)/matrix.cc \
    $(SPBL_COMMON_DIR)/matrix.hh \
-   $(SPBL_COMMON_DIR)/coordinates.hh \
    $(SPBL_COMMON_DIR)/vectors.cc \
    $(SPBL_COMMON_DIR)/vectors.hh \
    $(SPBL_COMMON_DIR)/multi_index.hh \
@@ -1245,16 +1148,14 @@ main_test_pa_scatt_SOURCES = main_test_pa_scatt.cc \
    $(SPBL_COMMON_DIR)/params.hh \
    $(SPBL_COMMON_DIR)/physics.cc \
    $(SPBL_COMMON_DIR)/physics.hh \
-   $(SPBL_COMMON_DIR)/specie.hh \
-   $(SPBL_COMMON_DIR)/physical_constants.hh \
    $(SPBL_COMMON_DIR)/data_container.hh \
    $(SPBL_COMMON_DIR)/data_container.cc \
    $(SPBL_COMMON_DIR)/random.hh \
    $(SPBL_COMMON_DIR)/rk_config.hh \
    $(SPBL_COMMON_DIR)/definitions.hh \
-   $(SPBL_COMMON_DIR)/print_warn.hh \
-   $(SPBL_COMMON_DIR)/gpu_config.hh
+   $(SPBL_COMMON_DIR)/print_warn.hh
 
+main_test_pa_scatt_LDADD = $(MPI_LIBS) $(GSL_LIBS)
 main_test_perp_diff_SOURCES = main_test_perp_diff.cc \
    $(SPBL_SOURCE_DIR)/simulation.cc \
    $(SPBL_SOURCE_DIR)/simulation.hh \
@@ -1302,7 +1203,6 @@ main_test_perp_diff_SOURCES = main_test_perp_diff.cc \
    $(SPBL_COMMON_DIR)/mpi_config.hh \
    $(SPBL_COMMON_DIR)/matrix.cc \
    $(SPBL_COMMON_DIR)/matrix.hh \
-   $(SPBL_COMMON_DIR)/coordinates.hh \
    $(SPBL_COMMON_DIR)/vectors.cc \
    $(SPBL_COMMON_DIR)/vectors.hh \
    $(SPBL_COMMON_DIR)/multi_index.hh \
@@ -1312,16 +1212,14 @@ main_test_perp_diff_SOURCES = main_test_perp_diff.cc \
    $(SPBL_COMMON_DIR)/params.hh \
    $(SPBL_COMMON_DIR)/physics.cc \
    $(SPBL_COMMON_DIR)/physics.hh \
-   $(SPBL_COMMON_DIR)/specie.hh \
-   $(SPBL_COMMON_DIR)/physical_constants.hh \
    $(SPBL_COMMON_DIR)/data_container.hh \
    $(SPBL_COMMON_DIR)/data_container.cc \
    $(SPBL_COMMON_DIR)/random.hh \
    $(SPBL_COMMON_DIR)/rk_config.hh \
    $(SPBL_COMMON_DIR)/definitions.hh \
-   $(SPBL_COMMON_DIR)/print_warn.hh \
-   $(SPBL_COMMON_DIR)/gpu_config.hh
+   $(SPBL_COMMON_DIR)/print_warn.hh
 
+main_test_perp_diff_LDADD = $(MPI_LIBS) $(GSL_LIBS)
 main_test_full_diff_SOURCES = main_test_full_diff.cc \
    $(SPBL_SOURCE_DIR)/simulation.cc \
    $(SPBL_SOURCE_DIR)/simulation.hh \
@@ -1367,7 +1265,6 @@ main_test_full_diff_SOURCES = main_test_full_diff.cc \
    $(SPBL_COMMON_DIR)/mpi_config.hh \
    $(SPBL_COMMON_DIR)/matrix.cc \
    $(SPBL_COMMON_DIR)/matrix.hh \
-   $(SPBL_COMMON_DIR)/coordinates.hh \
    $(SPBL_COMMON_DIR)/vectors.cc \
    $(SPBL_COMMON_DIR)/vectors.hh \
    $(SPBL_COMMON_DIR)/multi_index.hh \
@@ -1377,16 +1274,14 @@ main_test_full_diff_SOURCES = main_test_full_diff.cc \
    $(SPBL_COMMON_DIR)/params.hh \
    $(SPBL_COMMON_DIR)/physics.cc \
    $(SPBL_COMMON_DIR)/physics.hh \
-   $(SPBL_COMMON_DIR)/specie.hh \
-   $(SPBL_COMMON_DIR)/physical_constants.hh \
    $(SPBL_COMMON_DIR)/data_container.hh \
    $(SPBL_COMMON_DIR)/data_container.cc \
    $(SPBL_COMMON_DIR)/random.hh \
    $(SPBL_COMMON_DIR)/rk_config.hh \
    $(SPBL_COMMON_DIR)/definitions.hh \
-   $(SPBL_COMMON_DIR)/print_warn.hh \
-   $(SPBL_COMMON_DIR)/gpu_config.hh
+   $(SPBL_COMMON_DIR)/print_warn.hh
 
+main_test_full_diff_LDADD = $(MPI_LIBS) $(GSL_LIBS)
 main_test_diff_shock_acc_SOURCES = main_test_diff_shock_acc.cc \
    $(SPBL_SOURCE_DIR)/simulation.cc \
    $(SPBL_SOURCE_DIR)/simulation.hh \
@@ -1438,7 +1333,6 @@ main_test_diff_shock_acc_SOURCES = main_test_diff_shock_acc.cc \
    $(SPBL_COMMON_DIR)/mpi_config.hh \
    $(SPBL_COMMON_DIR)/matrix.cc \
    $(SPBL_COMMON_DIR)/matrix.hh \
-   $(SPBL_COMMON_DIR)/coordinates.hh \
    $(SPBL_COMMON_DIR)/vectors.cc \
    $(SPBL_COMMON_DIR)/vectors.hh \
    $(SPBL_COMMON_DIR)/multi_index.hh \
@@ -1448,20 +1342,17 @@ main_test_diff_shock_acc_SOURCES = main_test_diff_shock_acc.cc \
    $(SPBL_COMMON_DIR)/params.hh \
    $(SPBL_COMMON_DIR)/physics.cc \
    $(SPBL_COMMON_DIR)/physics.hh \
-   $(SPBL_COMMON_DIR)/specie.hh \
-   $(SPBL_COMMON_DIR)/physical_constants.hh \
    $(SPBL_COMMON_DIR)/data_container.hh \
    $(SPBL_COMMON_DIR)/data_container.cc \
    $(SPBL_COMMON_DIR)/random.hh \
    $(SPBL_COMMON_DIR)/rk_config.hh \
    $(SPBL_COMMON_DIR)/definitions.hh \
-   $(SPBL_COMMON_DIR)/print_warn.hh \
-   $(SPBL_COMMON_DIR)/gpu_config.hh
+   $(SPBL_COMMON_DIR)/print_warn.hh
 
+main_test_diff_shock_acc_LDADD = $(MPI_LIBS) $(GSL_LIBS)
 main_postprocess_diff_shock_acc_SOURCES = main_postprocess_diff_shock_acc.cc \
    $(SPBL_COMMON_DIR)/matrix.cc \
    $(SPBL_COMMON_DIR)/matrix.hh \
-   $(SPBL_COMMON_DIR)/coordinates.hh \
    $(SPBL_COMMON_DIR)/vectors.cc \
    $(SPBL_COMMON_DIR)/vectors.hh \
    $(SPBL_COMMON_DIR)/multi_index.hh \
@@ -1471,14 +1362,12 @@ main_postprocess_diff_shock_acc_SOURCES = main_postprocess_diff_shock_acc.cc \
    $(SPBL_COMMON_DIR)/params.hh \
    $(SPBL_COMMON_DIR)/physics.cc \
    $(SPBL_COMMON_DIR)/physics.hh \
-   $(SPBL_COMMON_DIR)/specie.hh \
-   $(SPBL_COMMON_DIR)/physical_constants.hh \
    $(SPBL_COMMON_DIR)/data_container.hh \
    $(SPBL_COMMON_DIR)/data_container.cc \
    $(SPBL_COMMON_DIR)/definitions.hh \
-   $(SPBL_COMMON_DIR)/print_warn.hh \
-   $(SPBL_COMMON_DIR)/gpu_config.hh
+   $(SPBL_COMMON_DIR)/print_warn.hh
 
+main_postprocess_diff_shock_acc_LDADD = $(MPI_LIBS) $(GSL_LIBS)
 main_test_modulation_cartesian_parker_SOURCES = main_test_modulation_cartesian_parker.cc \
    $(SPBL_SOURCE_DIR)/simulation.cc \
    $(SPBL_SOURCE_DIR)/simulation.hh \
@@ -1542,7 +1431,6 @@ main_test_modulation_cartesian_parker_SOURCES = main_test_modulation_cartesian_p
    $(SPBL_COMMON_DIR)/data_container.cc \
    $(SPBL_COMMON_DIR)/matrix.cc \
    $(SPBL_COMMON_DIR)/matrix.hh \
-   $(SPBL_COMMON_DIR)/coordinates.hh \
    $(SPBL_COMMON_DIR)/vectors.cc \
    $(SPBL_COMMON_DIR)/vectors.hh \
    $(SPBL_COMMON_DIR)/multi_index.hh \
@@ -1552,18 +1440,15 @@ main_test_modulation_cartesian_parker_SOURCES = main_test_modulation_cartesian_p
    $(SPBL_COMMON_DIR)/params.hh \
    $(SPBL_COMMON_DIR)/physics.cc \
    $(SPBL_COMMON_DIR)/physics.hh \
-   $(SPBL_COMMON_DIR)/specie.hh \
-   $(SPBL_COMMON_DIR)/physical_constants.hh \
    $(SPBL_COMMON_DIR)/random.hh \
    $(SPBL_COMMON_DIR)/rk_config.hh \
    $(SPBL_COMMON_DIR)/definitions.hh \
-   $(SPBL_COMMON_DIR)/print_warn.hh \
-   $(SPBL_COMMON_DIR)/gpu_config.hh
+   $(SPBL_COMMON_DIR)/print_warn.hh
 
+main_test_modulation_cartesian_parker_LDADD = $(MPI_LIBS) $(GSL_LIBS)
 main_postprocess_modulation_cartesian_parker_SOURCES = main_postprocess_modulation_cartesian_parker.cc \
    $(SPBL_COMMON_DIR)/matrix.cc \
    $(SPBL_COMMON_DIR)/matrix.hh \
-   $(SPBL_COMMON_DIR)/coordinates.hh \
    $(SPBL_COMMON_DIR)/vectors.cc \
    $(SPBL_COMMON_DIR)/vectors.hh \
    $(SPBL_COMMON_DIR)/multi_index.hh \
@@ -1573,14 +1458,12 @@ main_postprocess_modulation_cartesian_parker_SOURCES = main_postprocess_modulati
    $(SPBL_COMMON_DIR)/params.hh \
    $(SPBL_COMMON_DIR)/physics.cc \
    $(SPBL_COMMON_DIR)/physics.hh \
-   $(SPBL_COMMON_DIR)/specie.hh \
-   $(SPBL_COMMON_DIR)/physical_constants.hh \
    $(SPBL_COMMON_DIR)/data_container.hh \
    $(SPBL_COMMON_DIR)/data_container.cc \
    $(SPBL_COMMON_DIR)/definitions.hh \
-   $(SPBL_COMMON_DIR)/print_warn.hh \
-   $(SPBL_COMMON_DIR)/gpu_config.hh
+   $(SPBL_COMMON_DIR)/print_warn.hh
 
+main_postprocess_modulation_cartesian_parker_LDADD = $(MPI_LIBS) $(GSL_LIBS)
 main_generate_cartesian_solarwind_background_SOURCES = main_generate_cartesian_solarwind_background.cc \
    $(SPBL_SOURCE_DIR)/background_solarwind.cc \
    $(SPBL_SOURCE_DIR)/background_solarwind.hh \
@@ -1589,7 +1472,6 @@ main_generate_cartesian_solarwind_background_SOURCES = main_generate_cartesian_s
    $(SPBL_SOURCE_DIR)/background_base_visual.cc \
    $(SPBL_COMMON_DIR)/matrix.cc \
    $(SPBL_COMMON_DIR)/matrix.hh \
-   $(SPBL_COMMON_DIR)/coordinates.hh \
    $(SPBL_COMMON_DIR)/vectors.cc \
    $(SPBL_COMMON_DIR)/vectors.hh \
    $(SPBL_COMMON_DIR)/multi_index.hh \
@@ -1599,14 +1481,12 @@ main_generate_cartesian_solarwind_background_SOURCES = main_generate_cartesian_s
    $(SPBL_COMMON_DIR)/params.hh \
    $(SPBL_COMMON_DIR)/physics.cc \
    $(SPBL_COMMON_DIR)/physics.hh \
-   $(SPBL_COMMON_DIR)/specie.hh \
-   $(SPBL_COMMON_DIR)/physical_constants.hh \
    $(SPBL_COMMON_DIR)/data_container.cc \
    $(SPBL_COMMON_DIR)/data_container.hh \
    $(SPBL_COMMON_DIR)/definitions.hh \
-   $(SPBL_COMMON_DIR)/print_warn.hh \
-   $(SPBL_COMMON_DIR)/gpu_config.hh
+   $(SPBL_COMMON_DIR)/print_warn.hh
 
+main_generate_cartesian_solarwind_background_LDADD = $(MPI_LIBS) $(GSL_LIBS)
 all: all-am
 
 .SUFFIXES:
@@ -1719,10 +1599,6 @@ $(SPBL_COMMON_DIR)/data_container.$(OBJEXT):  \
 	$(SPBL_COMMON_DIR)/$(am__dirstamp) \
 	$(SPBL_COMMON_DIR)/$(DEPDIR)/$(am__dirstamp)
 
-main_generate_cartesian_parker_spiral$(EXEEXT): $(main_generate_cartesian_parker_spiral_OBJECTS) $(main_generate_cartesian_parker_spiral_DEPENDENCIES) $(EXTRA_main_generate_cartesian_parker_spiral_DEPENDENCIES) 
-	@rm -f main_generate_cartesian_parker_spiral$(EXEEXT)
-	$(AM_V_CXXLD)$(CXXLINK) $(main_generate_cartesian_parker_spiral_OBJECTS) $(main_generate_cartesian_parker_spiral_LDADD) $(LIBS)
-
 main_generate_cartesian_solarwind_background$(EXEEXT): $(main_generate_cartesian_solarwind_background_OBJECTS) $(main_generate_cartesian_solarwind_background_DEPENDENCIES) $(EXTRA_main_generate_cartesian_solarwind_background_DEPENDENCIES) 
 	@rm -f main_generate_cartesian_solarwind_background$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(main_generate_cartesian_solarwind_background_OBJECTS) $(main_generate_cartesian_solarwind_background_LDADD) $(LIBS)
@@ -1734,28 +1610,37 @@ main_postprocess_diff_shock_acc$(EXEEXT): $(main_postprocess_diff_shock_acc_OBJE
 main_postprocess_modulation_cartesian_parker$(EXEEXT): $(main_postprocess_modulation_cartesian_parker_OBJECTS) $(main_postprocess_modulation_cartesian_parker_DEPENDENCIES) $(EXTRA_main_postprocess_modulation_cartesian_parker_DEPENDENCIES) 
 	@rm -f main_postprocess_modulation_cartesian_parker$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(main_postprocess_modulation_cartesian_parker_OBJECTS) $(main_postprocess_modulation_cartesian_parker_LDADD) $(LIBS)
-$(SPBL_SOURCE_DIR)/trajectory_fieldline.$(OBJEXT):  \
+$(SPBL_SOURCE_DIR)/simulation.$(OBJEXT):  \
 	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
 	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
-$(SPBL_SOURCE_DIR)/trajectory_base.$(OBJEXT):  \
+$(SPBL_SOURCE_DIR)/distribution_other.$(OBJEXT):  \
+	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
+	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
+$(SPBL_SOURCE_DIR)/distribution_templated.$(OBJEXT):  \
 	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
 	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
 $(SPBL_SOURCE_DIR)/distribution_base.$(OBJEXT):  \
 	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
 	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
-$(SPBL_SOURCE_DIR)/background_server_cartesian.$(OBJEXT):  \
+$(SPBL_SOURCE_DIR)/trajectory_parker_source.$(OBJEXT):  \
 	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
 	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
-$(SPBL_SOURCE_DIR)/background_server.$(OBJEXT):  \
+$(SPBL_SOURCE_DIR)/trajectory_parker.$(OBJEXT):  \
 	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
 	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
-$(SPBL_SOURCE_DIR)/boundary_momentum.$(OBJEXT):  \
+$(SPBL_SOURCE_DIR)/trajectory_base.$(OBJEXT):  \
 	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
 	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
-$(SPBL_SOURCE_DIR)/boundary_space.$(OBJEXT):  \
+$(SPBL_SOURCE_DIR)/background_smooth_shock.$(OBJEXT):  \
+	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
+	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
+$(SPBL_SOURCE_DIR)/background_shock.$(OBJEXT):  \
 	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
 	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
 $(SPBL_SOURCE_DIR)/boundary_time.$(OBJEXT):  \
+	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
+	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
+$(SPBL_SOURCE_DIR)/boundary_space.$(OBJEXT):  \
 	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
 	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
 $(SPBL_SOURCE_DIR)/boundary_base.$(OBJEXT):  \
@@ -1773,64 +1658,21 @@ $(SPBL_SOURCE_DIR)/initial_momentum.$(OBJEXT):  \
 $(SPBL_SOURCE_DIR)/initial_base.$(OBJEXT):  \
 	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
 	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
-$(SPBL_SOURCE_DIR)/diffusion_base.$(OBJEXT):  \
-	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
-	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
-$(SPBL_SOURCE_DIR)/source_base.$(OBJEXT):  \
-	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
-	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
-$(SPBL_SOURCE_DIR)/server_cartesian.$(OBJEXT):  \
-	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
-	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
-$(SPBL_SOURCE_DIR)/server_base.$(OBJEXT):  \
-	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
-	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
-$(SPBL_SOURCE_DIR)/cache_lru.$(OBJEXT):  \
-	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
-	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
-$(SPBL_SOURCE_DIR)/block_cartesian.$(OBJEXT):  \
-	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
-	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
-$(SPBL_SOURCE_DIR)/block_base.$(OBJEXT):  \
-	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
-	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
-$(SPBL_SOURCE_DIR)/reader_cartesian.$(OBJEXT):  \
-	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
-	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
-$(SPBL_COMMON_DIR)/mpi_config.$(OBJEXT):  \
-	$(SPBL_COMMON_DIR)/$(am__dirstamp) \
-	$(SPBL_COMMON_DIR)/$(DEPDIR)/$(am__dirstamp)
-
-main_test_cartesian_parker_spiral$(EXEEXT): $(main_test_cartesian_parker_spiral_OBJECTS) $(main_test_cartesian_parker_spiral_DEPENDENCIES) $(EXTRA_main_test_cartesian_parker_spiral_DEPENDENCIES) 
-	@rm -f main_test_cartesian_parker_spiral$(EXEEXT)
-	$(AM_V_CXXLD)$(CXXLINK) $(main_test_cartesian_parker_spiral_OBJECTS) $(main_test_cartesian_parker_spiral_LDADD) $(LIBS)
-$(SPBL_SOURCE_DIR)/simulation.$(OBJEXT):  \
-	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
-	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
-$(SPBL_SOURCE_DIR)/distribution_other.$(OBJEXT):  \
-	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
-	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
-$(SPBL_SOURCE_DIR)/distribution_templated.$(OBJEXT):  \
-	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
-	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
-$(SPBL_SOURCE_DIR)/trajectory_parker_source.$(OBJEXT):  \
-	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
-	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
-$(SPBL_SOURCE_DIR)/trajectory_parker.$(OBJEXT):  \
-	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
-	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
-$(SPBL_SOURCE_DIR)/background_smooth_shock.$(OBJEXT):  \
-	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
-	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
-$(SPBL_SOURCE_DIR)/background_shock.$(OBJEXT):  \
-	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
-	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
 $(SPBL_SOURCE_DIR)/diffusion_other.$(OBJEXT):  \
+	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
+	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
+$(SPBL_SOURCE_DIR)/diffusion_base.$(OBJEXT):  \
 	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
 	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
 $(SPBL_SOURCE_DIR)/source_other.$(OBJEXT):  \
 	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
 	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
+$(SPBL_SOURCE_DIR)/source_base.$(OBJEXT):  \
+	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
+	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
+$(SPBL_COMMON_DIR)/mpi_config.$(OBJEXT):  \
+	$(SPBL_COMMON_DIR)/$(am__dirstamp) \
+	$(SPBL_COMMON_DIR)/$(DEPDIR)/$(am__dirstamp)
 
 main_test_diff_shock_acc$(EXEEXT): $(main_test_diff_shock_acc_OBJECTS) $(main_test_diff_shock_acc_DEPENDENCIES) $(EXTRA_main_test_diff_shock_acc_DEPENDENCIES) 
 	@rm -f main_test_diff_shock_acc$(EXEEXT)
@@ -1839,6 +1681,9 @@ $(SPBL_SOURCE_DIR)/trajectory_guiding.$(OBJEXT):  \
 	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
 	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
 $(SPBL_SOURCE_DIR)/background_dipole.$(OBJEXT):  \
+	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
+	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
+$(SPBL_SOURCE_DIR)/boundary_momentum.$(OBJEXT):  \
 	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
 	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
 
@@ -1863,6 +1708,30 @@ $(SPBL_SOURCE_DIR)/trajectory_focused.$(OBJEXT):  \
 main_test_init_cond_records$(EXEEXT): $(main_test_init_cond_records_OBJECTS) $(main_test_init_cond_records_DEPENDENCIES) $(EXTRA_main_test_init_cond_records_DEPENDENCIES) 
 	@rm -f main_test_init_cond_records$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(main_test_init_cond_records_OBJECTS) $(main_test_init_cond_records_LDADD) $(LIBS)
+$(SPBL_SOURCE_DIR)/background_server_cartesian.$(OBJEXT):  \
+	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
+	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
+$(SPBL_SOURCE_DIR)/background_server.$(OBJEXT):  \
+	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
+	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
+$(SPBL_SOURCE_DIR)/server_cartesian.$(OBJEXT):  \
+	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
+	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
+$(SPBL_SOURCE_DIR)/server_base.$(OBJEXT):  \
+	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
+	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
+$(SPBL_SOURCE_DIR)/cache_lru.$(OBJEXT):  \
+	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
+	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
+$(SPBL_SOURCE_DIR)/block_cartesian.$(OBJEXT):  \
+	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
+	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
+$(SPBL_SOURCE_DIR)/block_base.$(OBJEXT):  \
+	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
+	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
+$(SPBL_SOURCE_DIR)/reader_cartesian.$(OBJEXT):  \
+	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
+	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
 
 main_test_modulation_cartesian_parker$(EXEEXT): $(main_test_modulation_cartesian_parker_OBJECTS) $(main_test_modulation_cartesian_parker_DEPENDENCIES) $(EXTRA_main_test_modulation_cartesian_parker_DEPENDENCIES) 
 	@rm -f main_test_modulation_cartesian_parker$(EXEEXT)
@@ -1881,14 +1750,17 @@ main_test_pa_distro_isotrop$(EXEEXT): $(main_test_pa_distro_isotrop_OBJECTS) $(m
 main_test_pa_scatt$(EXEEXT): $(main_test_pa_scatt_OBJECTS) $(main_test_pa_scatt_DEPENDENCIES) $(EXTRA_main_test_pa_scatt_DEPENDENCIES) 
 	@rm -f main_test_pa_scatt$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(main_test_pa_scatt_OBJECTS) $(main_test_pa_scatt_LDADD) $(LIBS)
+$(SPBL_SOURCE_DIR)/trajectory_fieldline.$(OBJEXT):  \
+	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
+	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
+
+main_test_parker_spiral$(EXEEXT): $(main_test_parker_spiral_OBJECTS) $(main_test_parker_spiral_DEPENDENCIES) $(EXTRA_main_test_parker_spiral_DEPENDENCIES) 
+	@rm -f main_test_parker_spiral$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(main_test_parker_spiral_OBJECTS) $(main_test_parker_spiral_LDADD) $(LIBS)
 
 main_test_perp_diff$(EXEEXT): $(main_test_perp_diff_OBJECTS) $(main_test_perp_diff_DEPENDENCIES) $(EXTRA_main_test_perp_diff_DEPENDENCIES) 
 	@rm -f main_test_perp_diff$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(main_test_perp_diff_OBJECTS) $(main_test_perp_diff_LDADD) $(LIBS)
-
-main_test_solarwind_parker_spiral$(EXEEXT): $(main_test_solarwind_parker_spiral_OBJECTS) $(main_test_solarwind_parker_spiral_DEPENDENCIES) $(EXTRA_main_test_solarwind_parker_spiral_DEPENDENCIES) 
-	@rm -f main_test_solarwind_parker_spiral$(EXEEXT)
-	$(AM_V_CXXLD)$(CXXLINK) $(main_test_solarwind_parker_spiral_OBJECTS) $(main_test_solarwind_parker_spiral_LDADD) $(LIBS)
 $(SPBL_SOURCE_DIR)/background_waves.$(OBJEXT):  \
 	$(SPBL_SOURCE_DIR)/$(am__dirstamp) \
 	$(SPBL_SOURCE_DIR)/$(DEPDIR)/$(am__dirstamp)
@@ -1951,11 +1823,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(SPBL_SOURCE_DIR)/$(DEPDIR)/trajectory_guiding_scatt.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@$(SPBL_SOURCE_DIR)/$(DEPDIR)/trajectory_parker.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@$(SPBL_SOURCE_DIR)/$(DEPDIR)/trajectory_parker_source.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main_generate_cartesian_parker_spiral.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main_generate_cartesian_solarwind_background.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main_postprocess_diff_shock_acc.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main_postprocess_modulation_cartesian_parker.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main_test_cartesian_parker_spiral.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main_test_diff_shock_acc.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main_test_dipole_periods.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main_test_dipole_visual.Po@am__quote@ # am--include-marker
@@ -1964,8 +1834,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main_test_modulation_cartesian_parker.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main_test_pa_distro_isotrop.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main_test_pa_scatt.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main_test_parker_spiral.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main_test_perp_diff.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main_test_solarwind_parker_spiral.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main_test_turb_waves.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
@@ -2118,7 +1988,7 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-binPROGRAMS clean-generic clean-local mostlyclean-am
+clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
 		-rm -f $(SPBL_COMMON_DIR)/$(DEPDIR)/data_container.Po
@@ -2167,11 +2037,9 @@ distclean: distclean-am
 	-rm -f $(SPBL_SOURCE_DIR)/$(DEPDIR)/trajectory_guiding_scatt.Po
 	-rm -f $(SPBL_SOURCE_DIR)/$(DEPDIR)/trajectory_parker.Po
 	-rm -f $(SPBL_SOURCE_DIR)/$(DEPDIR)/trajectory_parker_source.Po
-	-rm -f ./$(DEPDIR)/main_generate_cartesian_parker_spiral.Po
 	-rm -f ./$(DEPDIR)/main_generate_cartesian_solarwind_background.Po
 	-rm -f ./$(DEPDIR)/main_postprocess_diff_shock_acc.Po
 	-rm -f ./$(DEPDIR)/main_postprocess_modulation_cartesian_parker.Po
-	-rm -f ./$(DEPDIR)/main_test_cartesian_parker_spiral.Po
 	-rm -f ./$(DEPDIR)/main_test_diff_shock_acc.Po
 	-rm -f ./$(DEPDIR)/main_test_dipole_periods.Po
 	-rm -f ./$(DEPDIR)/main_test_dipole_visual.Po
@@ -2180,8 +2048,8 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/main_test_modulation_cartesian_parker.Po
 	-rm -f ./$(DEPDIR)/main_test_pa_distro_isotrop.Po
 	-rm -f ./$(DEPDIR)/main_test_pa_scatt.Po
+	-rm -f ./$(DEPDIR)/main_test_parker_spiral.Po
 	-rm -f ./$(DEPDIR)/main_test_perp_diff.Po
-	-rm -f ./$(DEPDIR)/main_test_solarwind_parker_spiral.Po
 	-rm -f ./$(DEPDIR)/main_test_turb_waves.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
@@ -2274,11 +2142,9 @@ maintainer-clean: maintainer-clean-am
 	-rm -f $(SPBL_SOURCE_DIR)/$(DEPDIR)/trajectory_guiding_scatt.Po
 	-rm -f $(SPBL_SOURCE_DIR)/$(DEPDIR)/trajectory_parker.Po
 	-rm -f $(SPBL_SOURCE_DIR)/$(DEPDIR)/trajectory_parker_source.Po
-	-rm -f ./$(DEPDIR)/main_generate_cartesian_parker_spiral.Po
 	-rm -f ./$(DEPDIR)/main_generate_cartesian_solarwind_background.Po
 	-rm -f ./$(DEPDIR)/main_postprocess_diff_shock_acc.Po
 	-rm -f ./$(DEPDIR)/main_postprocess_modulation_cartesian_parker.Po
-	-rm -f ./$(DEPDIR)/main_test_cartesian_parker_spiral.Po
 	-rm -f ./$(DEPDIR)/main_test_diff_shock_acc.Po
 	-rm -f ./$(DEPDIR)/main_test_dipole_periods.Po
 	-rm -f ./$(DEPDIR)/main_test_dipole_visual.Po
@@ -2287,8 +2153,8 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/main_test_modulation_cartesian_parker.Po
 	-rm -f ./$(DEPDIR)/main_test_pa_distro_isotrop.Po
 	-rm -f ./$(DEPDIR)/main_test_pa_scatt.Po
+	-rm -f ./$(DEPDIR)/main_test_parker_spiral.Po
 	-rm -f ./$(DEPDIR)/main_test_perp_diff.Po
-	-rm -f ./$(DEPDIR)/main_test_solarwind_parker_spiral.Po
 	-rm -f ./$(DEPDIR)/main_test_turb_waves.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
@@ -2310,24 +2176,21 @@ uninstall-am: uninstall-binPROGRAMS
 .MAKE: install-am install-strip
 
 .PHONY: CTAGS GTAGS TAGS all all-am am--depfiles check check-am clean \
-	clean-binPROGRAMS clean-generic clean-local cscopelist-am \
-	ctags ctags-am distclean distclean-compile distclean-generic \
-	distclean-tags distdir dvi dvi-am html html-am info info-am \
-	install install-am install-binPROGRAMS install-data \
-	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic pdf pdf-am ps ps-am tags tags-am uninstall \
-	uninstall-am uninstall-binPROGRAMS
+	clean-binPROGRAMS clean-generic cscopelist-am ctags ctags-am \
+	distclean distclean-compile distclean-generic distclean-tags \
+	distdir dvi dvi-am html html-am info info-am install \
+	install-am install-binPROGRAMS install-data install-data-am \
+	install-dvi install-dvi-am install-exec install-exec-am \
+	install-html install-html-am install-info install-info-am \
+	install-man install-pdf install-pdf-am install-ps \
+	install-ps-am install-strip installcheck installcheck-am \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-compile mostlyclean-generic pdf pdf-am \
+	ps ps-am tags tags-am uninstall uninstall-am \
+	uninstall-binPROGRAMS
 
 .PRECIOUS: Makefile
 
-
-clean-local:
-	rm -rf logs cartesian_backgrounds output_data output_plots benchmark_results.txt
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
