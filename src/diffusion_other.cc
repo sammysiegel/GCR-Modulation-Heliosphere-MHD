@@ -1103,28 +1103,29 @@ void DiffusionSammy::SetupDiffusion(bool construct)
 
 void DiffusionSammy::EvaluateDiffusion(void)
 {
-   double l_perp = _spdata.region[l_perp_index] * 0.128;
-   double del_b = (sqrt(_spdata.region[del_b_index])/21.81) * 1e-5 / unit_magnetic_fluid;
+   double l_perp = _spdata.region[l_perp_index];
+   double del_b = _spdata.region[del_b_index] * 1e-5 / unit_magnetic_fluid;
+   double A_sl = del_b / _spdata.Bmag;
    if((comp_eval == 2)) return;
    if (_spdata.Uvec.Norm() > 3.0) {
-      Kappa[1] = ((3.0 * Cube(vmag) * Sqr(_spdata.Bmag))/(20.0 * l_perp * Sqr(Omega) * Sqr(del_b) * sin(3.0 * M_1_PI/5.0)))
-                                    * (1.0 + (72.0/7.0)*pow(l_perp / LarmorRadius(_mom[0], _spdata.Bmag, specie) , 1.667));
-      Kappa[0] = 1.1 * pow((Sqr(del_b) * l_perp * vmag)/(3.0 * Sqr(_spdata.Bmag)), 0.667) * pow(Kappa[1], 0.333);
+      Kappa[1] = 5*((3.0 * Cube(vmag))/(20.0 * l_perp * Sqr(Omega) * Sqr(A_sl) * sin(3.0 * M_PI/5.0))) * ((72.0/7.0)*pow(l_perp * Omega / vmag , 1.667) + 1.0);
+      Kappa[0] = 1.1 * pow(Sqr(A_sl) * l_perp * vmag / 3.0, 0.667) * pow(Kappa[1], 0.333);
    }
    else {
-      Kappa[1] = (
-         (1 / 9.7705) * pow(GSL_CONST_CGSM_SPEED_OF_LIGHT * GSL_CONST_CGSM_MASS_PROTON * GSL_CONST_CGSM_MASS_PROTON / SPC_CONST_CGSM_ELECTRON_CHARGE, 0.333)
-         * pow(RelFactor1(_mom[0]), 0.333) * vmag * vmag * unit_velocity_fluid * unit_velocity_fluid
-         * pow(0.02 * unit_length_fluid, 0.667)
-         * 0.144
-         / (0.03 * 1e-5)
-      );
-      //Kappa[1] = ((1.0 / 9.7705) * pow(c_code * Sqr(SpeciesMasses[specie]) / SpeciesCharges[specie], 0.333)
-      //            * pow(RelFactor1(_mom[0], specie), 0.333) * Sqr(vmag) * pow(0.003 / unit_number_density_fluid) * pow(0.02, 0.667) / (0.03 * 1e-5 /unit_magnetic_fluid));
+      del_b = 0.03 * 1e-5 / unit_magnetic_fluid;
+      //Kappa[1] = (
+      //   (1 / 9.7705) * pow(GSL_CONST_CGSM_SPEED_OF_LIGHT * GSL_CONST_CGSM_MASS_PROTON * GSL_CONST_CGSM_MASS_PROTON / SPC_CONST_CGSM_ELECTRON_CHARGE, 0.333)
+      //  * pow(RelFactor1(_mom[0]), 0.333) * vmag * vmag * unit_velocity_fluid * unit_velocity_fluid
+      //   * pow(l_perp * unit_length_fluid, 0.667)
+      //   * 0.144
+      //   / (0.03 * 1e-5)
+      //);
+      Kappa[1] = ((2.0 / (3.0 * M_PI * 0.667 * 1.2842)) * (_spdata.Bmag/del_b) * pow((c_code*2.0*M_PI)/(PlasmaFrequency(_spdata.n_dens * SpeciesMasses[specie], specie) * l_perp), 0.333) * pow(RelFactor1(_mom[0], specie), 0.333) * Sqr(vmag) * l_perp / (AlfvenSpeed(_spdata.n_dens * SpeciesMasses[specie], Sqr(_spdata.Bmag)) * 2.0*M_PI));
       Kappa[0] = 1.1 * pow((Sqr(0.03 * 1e-5 / unit_magnetic_fluid) * l_perp * vmag)/(3.0 * Sqr(_spdata.Bmag)), 0.667) * pow(Kappa[1], 0.333);
    };
-   Kappa[1] = Kappa[1] * A * pow(Rigidity(_mom[0], specie) / R0, mu);
-   Kappa[0] = kap_rat * Kappa[1];
+   //Kappa[1] = Kappa[1] * A * pow(Rigidity(_mom[0], specie) / R0, mu);
+   //Kappa[0] = kap_rat * Kappa[1];
+
 };
 
 double DiffusionSammy::GetMuDerivative(void)

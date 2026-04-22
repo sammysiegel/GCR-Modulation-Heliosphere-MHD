@@ -461,7 +461,10 @@ void ServerCartesianFront::GetVariablesFromReader(SpatialData& spdata)
 
 // Region(s) indicator variable(s), if provided
 #ifdef SERVER_VAR_INDEX_REG
-   for (xyz = 0; xyz < SERVER_NUM_INDEX_REG; xyz++) spdata.region[xyz] = vars[SERVER_VAR_INDEX_REG + xyz];
+   for (xyz = 0; xyz < SERVER_NUM_INDEX_REG; xyz++) {
+      
+      spdata.region[xyz] = vars[SERVER_VAR_INDEX_REG + xyz];
+   }
 #else
    spdata.region = gv_zeros;
 #endif

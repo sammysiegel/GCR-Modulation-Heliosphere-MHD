@@ -15,7 +15,7 @@ This file is part of the SPECTRUM suite of scientific numerical simulation codes
 namespace Spectrum {
 
 //! Number of variables per zone
-const int n_variables_batl = 10;
+const int n_variables_batl = 11;
 
 //! Size of the block in each dimension
 const MultiIndex block_size_batl(8, 8, 8);
